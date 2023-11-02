@@ -1,21 +1,26 @@
-import { useEffect } from 'react';
+import Main from '@components/Center/Main';
+import Left from '@components/Left/Left';
+import Right from '@components/Right/Right';
 import styled from 'styled-components';
 
-function Home() {
+function HomePage() {
   return (
     <Container>
       {/* left nav */}
-      <div className="" />
+      <Left />
       {/* main */}
-      <div className="" />
+      <Main />
       {/* right */}
-      <div className="" />
+      <Right />
     </Container>
   );
 }
 
-export default Home;
+export default HomePage;
 
 const Container = styled.div`
   display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
 `;
