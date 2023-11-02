@@ -1,6 +1,6 @@
-import Main from '@components/Center/Main';
-import Left from '@components/Left/Left';
-import Right from '@components/Right/Right';
+import Main from '@components/Center';
+import Left from '@components/Left';
+import Right from '@components/Right';
 import styled from 'styled-components';
 
 function HomePage() {

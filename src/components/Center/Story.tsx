@@ -115,8 +115,8 @@ const StoryImage = styled.div`
 
 const StroyCircle = styled(motion.div)`
   position: absolute;
-  width: 4rem;
-  height: 4rem;
+  width: 4.1rem;
+  height: 4.1rem;
   box-sizing: border-box;
   border: 3px solid transparent;
   border-radius: 50%;
