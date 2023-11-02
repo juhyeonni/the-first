@@ -1,10 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from '@pages/home';
+import HomePage from '@pages/home';
+import StoryPage from '@pages/story';
 
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/story" element={<StoryPage />} />
     </Routes>
   );
 }
