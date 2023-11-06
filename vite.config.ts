@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,39 +10,39 @@ export default defineConfig({
     alias: [
       {
         find: '@components',
-        replacement: '/src/components',
+        replacement: resolve(__dirname, 'src/components'),
       },
       {
         find: '@context',
-        replacement: '/src/context',
+        replacement: resolve(__dirname, 'src/context'),
       },
       {
         find: '@provider',
-        replacement: '/src/provider',
+        replacement: resolve(__dirname, 'src/provider'),
       },
       {
         find: '@assets',
-        replacement: '/src/assets',
+        replacement: resolve(__dirname, 'src/assets'),
       },
       {
         find: '@hooks',
-        replacement: '/src/hooks',
+        replacement: resolve(__dirname, 'src/hooks'),
       },
       {
         find: '@pages',
-        replacement: '/src/pages',
+        replacement: resolve(__dirname, 'src/pages'),
       },
       {
         find: '@services',
-        replacement: '/src/services',
+        replacement: resolve(__dirname, 'src/services'),
       },
       {
-        find: 'interfaces',
-        replacement: '/src/interfaces',
+        find: '@interfaces',
+        replacement: resolve(__dirname, 'src/interfaces'),
       },
       {
         find: '@',
-        replacement: '/src',
+        replacement: resolve(__dirname, 'src'),
       },
     ],
   },
