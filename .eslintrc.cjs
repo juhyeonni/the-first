@@ -13,11 +13,28 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'react/require-default-props': 'off',
+    'react/function-component-definition': 'off',
+    'react/destructuring-assignment': 'off',
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'no-use-before-define': 'off',
     '@typescript-eslint/naming-convention': [
       'warn',
       {
