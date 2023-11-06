@@ -1,4 +1,4 @@
-import Main from '@components/Center';
+import Main from '@components/Main';
 import Left from '@components/Left';
 import Right from '@components/Right';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 function HomePage() {
   return (
     <Container>
-      {/* left nav */}
+      {/* left */}
       <Left />
       {/* main */}
       <Main />
