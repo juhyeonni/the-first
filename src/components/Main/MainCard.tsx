@@ -1,4 +1,13 @@
+/* eslint-disable react/prop-types */
+import React, { useState, Component } from 'react';
 import styled from 'styled-components';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider, { Settings } from 'react-slick';
+
+import ArrowRightIcon from 'path-to-icons/ArrowRightIcon';
+import ArrowLeftIcon from 'path-to-icons/ArrowLeftIcon';
 
 const StyledMainCard = styled.div`
   /* 전체 Main div */
@@ -10,12 +19,13 @@ const StyledMainCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1px;
-  overflow: hidden;
-  padding: 9.27px 9.27px 0px;
+  /* overflow: hidden; */
+  /* padding: 9.27px 9.27px 0px; */
+  /* padding: 0 5px 0; */
   position: relative;
-  height: 950px;
-  width: 700px;
-  /* box-sizing: content-box; // 이 범위 안엣 다 해결 */
+  height: auto;
+  width: 80%;
+  box-sizing: content-box; // 이 범위 안엣 다 해결
 
   /* 🟢 1 Top. top 전체 감싸는 div  */
   & .element-top {
@@ -46,21 +56,21 @@ const StyledMainCard = styled.div`
   & .element-userImg {
     width: 100%;
     height: 100%;
-    position: absolute;
+    /* position: absolute; */
     object-fit: cover;
   }
 
   /* 🟢 1.2 Top. 아이디 wrap div */
   & .element-account {
-    align-items: flex-start;
-    justify-content: center;
-    display: flex;
+    /* align-items: flex-start; */
+    /* justify-content: center; */
+    /* display: flex; */
     flex-direction: column;
-    gap: 9.27px;
-    height: 85.26px;
+    /* gap: 9.27px; */
+    /* height: 85.26px; */
     padding: 9.27px 9.27px 9.27px 10.01px;
     position: relative;
-    width: 73%;
+    width: 77%;
     /* background-color: red; */
   }
 
@@ -75,18 +85,21 @@ const StyledMainCard = styled.div`
     height: 40px;
     position: relative;
     width: 40px;
+    margin-right: 5px;
     cursor: pointer;
   }
 
-  /* 2 Main. 메인 이미지 */
+  /* 🟢🟢🟢🟢🟢🟢 2 Main. 메인 이미지 🟢🟢🟢🟢🟢🟢*/
   & .element-main-image {
     border: 3.43px solid;
-    border-color: #000000;
-    margin-right: -0.53px;
+    /* border-color: #000000; */
     position: relative;
-    width: 620px;
-    height: 620px;
+    width: 550px;
+    height: 500px;
+    /* overflow: hidden; */
   }
+  /* 🟢🟢🟢🟢🟢🟢2 Main. 메인 이미지  🟢🟢🟢🟢🟢🟢*/
+
   & .element-wrap-image {
     display: flex; // 플렉스
   }
@@ -99,59 +112,47 @@ const StyledMainCard = styled.div`
     width: 100%;
   }
 
+  /*  아이디 + 작성 내용 ...* */
   & .element-content {
-    align-items: center;
-    background-color: #4da9ff;
+    align-items: start;
+    margin-bottom: 20px;
     border-radius: 4.63px;
-    display: flex;
+    display: block;
     gap: 12.52px;
-    height: 68px;
-    /* justify-content: center; */
-    /* margin-right: -0.53px; */
-    /* padding: 0px 12.52px; */
-    overflow: hidden;
+
     position: relative;
     width: 100%;
+    float: left;
+    width: 100%;
+    line-height: 1.5;
   }
-
-  /* 아래 계정 아이디 */
-  /* & .element-account-2 {
-    height: 46.31px;
-    margin-left: -3.54px;
-    position: relative;
-    width: 120.15px;
-    padding: 8px;
-  } */
 
   /* 사용자가 올린 글 */
   & .element-contents {
-    /* background-color: red; */
-    /* border: 1.14px solid;
-    border-color: #000000; */
-    margin-right: -3.54px;
-    position: relative;
-    height: 28px;
+    /* position: relative; */
+    font-size: 24px;
     width: 470px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   & .element-comment {
     align-items: center;
     align-self: stretch;
-    background-color: orange;
+    justify-content: start;
+    /* background-color: orange; */
     border-radius: 6.26px;
     display: flex;
     gap: 5.72px;
     height: 59px;
-    justify-content: center;
     overflow: hidden;
-    padding: 0px 2px 0px 1.25px;
+    /* padding: 0px 2px 0px 1.25px; */
     position: relative;
     width: 100%;
   }
 
+  /* 댓글달기 .... */
   & .element {
     align-items: center;
     background-color: #ffffff;
@@ -162,19 +163,31 @@ const StyledMainCard = styled.div`
     margin-top: -3px;
     padding: 12.52px;
     position: relative;
-    width: 371px;
+    width: 80%;
   }
 
-  & .text-wrapper {
+  & .element textarea.text-wrapper {
+    border: none; // 테두리를 전부 없애줍니다
+    border-bottom: 1px solid black;
     color: #000000;
     font-family: 'Inter-Regular', Helvetica;
-    font-size: 15px;
+    font-size: 25px;
     font-weight: 400;
     letter-spacing: 0;
     line-height: normal;
     position: relative;
-    white-space: nowrap;
-    width: fit-content;
+    white-space: normal;
+    overflow: auto;
+    width: 100%;
+    height: 80%;
+    resize: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  & textarea:focus {
+    outline: none;
   }
 
   & .element-upload {
@@ -196,8 +209,86 @@ const StyledMainCard = styled.div`
   }
 `;
 
+// 화살표 컴포넌트 정의
+const NextArrow: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  style,
+  onClick,
+}) => (
+  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+  <div
+    className={className}
+    style={{ ...style, display: 'block', right: '10px' }}
+    onClick={onClick}
+  />
+);
+
+const PrevArrow: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  style,
+  onClick,
+}) => (
+  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+  <div
+    className={className}
+    style={{
+      ...style,
+      display: 'block',
+      left: '30px',
+      backgroundColor: 'red',
+      position: 'absolute',
+    }}
+    onClick={onClick}
+  />
+);
+
+// 캐러셀 설정
+const settings: Settings = {
+  dots: true, // 점 네비게이션 표시
+  infinite: true, // 무한 롤링
+  speed: 500, // 애니메이션 속도
+  slidesToShow: 1, // 한 번에 슬라이드 되는 이미지 개수
+  slidesToScroll: 1, // 스크롤시 이동하는 이미지 개수
+
+  appendDots: (dots: any) => (
+    <div
+      style={{
+        width: '100%',
+        position: 'absolute',
+        bottom: '24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Dots>{dots}</Dots>
+    </div>
+  ),
+};
+
+const Dots = styled.ul`
+  & li {
+    background: #fff;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+  & li.slick-active {
+    background: #858484;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+`;
+
 /* --------------------------- 🟢 MainCard 🟢 --------------------------- */
 const MainCard = (): JSX.Element => {
+  /* 게시글 더보기 */
+  const [isTextShown, setIsTextShown] = useState(false);
+  const textContent =
+    '★ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。';
+  const maxLength = 30; // 원하는 글자 수
+
   return (
     <StyledMainCard>
       <div className="element-top">
@@ -213,7 +304,7 @@ const MainCard = (): JSX.Element => {
         {/* 아이디 */}
         <div className="element-account">
           <span className="userId">
-            cheiru94
+            cheiru94 {/* <- 🟡 사용자 아이디 입력 🟡 */}
             <img
               className="element-userImg"
               alt="Element userImg"
@@ -230,25 +321,42 @@ const MainCard = (): JSX.Element => {
           src="/main_imgs/three_dot.png"
         />
       </div>
-
+      {/* 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢 */}
       {/* ⭐ 메인 이미지 ⭐ */}
       <div className="element-main-image">
-        <img
-          className="element-userImg"
-          alt="Element userImg"
-          src="/main_imgs/blue_note1.png"
-        />
+        <Slider
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...settings}
+          nextArrow={<NextArrow />}
+          prevArrow={<PrevArrow />}
+        >
+          <div>
+            <img
+              className="element-userImg"
+              alt="Element userImg"
+              src="/main_imgs/blue_note1.png"
+            />
+          </div>
+          <div>
+            <img
+              className="element-userImg"
+              alt="Element userImg"
+              src="/main_imgs/blue_note1.png"
+            />
+          </div>
+        </Slider>
       </div>
-      {/* 중간 이미지 2개 짜리  */}
+
+      {/* 중간 이미지 2개  */}
       <div className="element-wrap-image">
-        {/* 하트 */}
+        {/* 하트 img */}
         <img
           className="element-icons"
           alt="Element icons"
           src="/main_imgs/heart_off.png"
           style={{ cursor: 'pointer' }}
         />
-        {/* 질문 */}
+        {/* 질문 img */}
         <img
           className="element-icons"
           alt="Element icons"
@@ -256,20 +364,29 @@ const MainCard = (): JSX.Element => {
           style={{ cursor: 'pointer' }}
         />
       </div>
+
+      {/* 아이디 + 작성 내용 */}
       <div className="element-content">
-        {/* <div className="element-account-2"> */}
+        {/* 🟢 계정 */}
         <span className="userId">cheiru94</span>
-        {/* </div> */}
-        <div className="element-contents">
-          ★ブルーノート東京35周年
-          特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。
-        </div>
+
+        {/* 🟢 게시글 내용 */}
+        <span className="element-contents">
+          {isTextShown
+            ? textContent
+            : `${textContent.substring(0, maxLength)}...`}
+          <button type="button" onClick={() => setIsTextShown(!isTextShown)}>
+            {isTextShown ? '접기' : '더보기'}
+          </button>
+        </span>
       </div>
       <div className="element-comment">
         <div className="element">
-          <div className="text-wrapper">댓글 달기 ....</div>
+          <textarea className="text-wrapper" />
         </div>
-        <div className="element-upload">게시</div>
+        <button type="button" className="element-upload">
+          게시
+        </button>
       </div>
       <div className="frame" />
     </StyledMainCard>
