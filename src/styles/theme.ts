@@ -1,27 +1,37 @@
-const windowSize = {
-  small: 'screen and (max-width: "600px")',
-  base: 'screen and (max-width: "768px")',
-  large: 'screen and (max-width: "1024px")',
+export const windowSize = {
+  sm: 'screen and (max-width: 600px)',
+  md: 'screen and (max-width: 768px)',
+  lg: 'screen and (max-width: 1024px)',
 };
 
-const fontSize = {
+export const fontSize = {
   xs: '0.5rem',
   sm: '0.75rem',
   base: '1rem',
   md: '1.25rem',
   lg: '1.5rem',
+  xl: '2rem',
+  '2xl': '2.5rem',
+  '3xl': '3rem',
 };
 
-const lightversion = {
-  background: '#fff',
-  fontPrimary: 'black',
-  fontSecondary: 'gray',
-  primary: '#00a0ff',
-  secondary: '#ddd',
-  hover: '#00a0ff50',
+export const fontFamily = {
+  notoSans: 'Noto Sans KR',
 };
 
-const repo = {
+export const lightTheme = {
+  bgColor: '#FFFFFF',
+  textColor: '#31302E',
+  borderColor: '1px solid #eaeaea',
+};
+
+export const darkTheme = {
+  bgColor: '#1E1E22',
+  textColor: '#ccc',
+  borderColor: '1px solid #2c2d33',
+};
+
+export const repo = {
   open: 'red',
   close: 'blue',
 };
@@ -29,8 +39,10 @@ const repo = {
 const theme = {
   windowSize,
   repo,
+  fontFamily,
   fontSize,
-  lightversion,
+  lightTheme,
+  darkTheme,
 };
 
 export default theme;
