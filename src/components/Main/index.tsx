@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 import Story from './Story';
+import MainCard from './MainCard';
 
 const Main = () => {
   return (
     <Container>
       <Story />
+      <div style={{ margin: '0 auto' }}>
+        <MainCard />
+      </div>
     </Container>
   );
 };
