@@ -13,6 +13,7 @@ export default Left;
 
 const Container = styled.div`
   flex: 1;
+  min-width: var(--nav-narrow-width);
   display: flex;
   flex-direction: column;
 
