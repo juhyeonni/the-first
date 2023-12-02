@@ -1,0 +1,87 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "story": [
+    {
+      "id": 1,
+      "name": "story1",
+      "img": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
+      "content": [
+        {
+          "id": 1,
+          "name": "content11",
+          "img": "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg"
+        },
+        {
+          "id": 2,
+          "name": "content12",
+          "img": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+        },
+        {
+          "id": 3,
+          "name": "content13",
+          "img": "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "story2",
+      "img": "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg",
+      "content": [
+        {
+          "id": 1,
+          "name": "content21",
+          "img": "https://picsum.photos/200/300"
+        },
+        {
+          "id": 2,
+          "name": "content22",
+          "img": "https://picsum.photos/200/300"
+        },
+        {
+          "id": 3,
+          "name": "content23",
+          "img": "https://picsum.photos/200/300"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "story3",
+      "img": "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg",
+      "content": [
+        {
+          "id": 1,
+          "name": "content31",
+          "img": "https://picsum.photos/200/300"
+        },
+        {
+          "id": 2,
+          "name": "content32",
+          "img": "https://picsum.photos/200/300"
+        },
+        {
+          "id": 3,
+          "name": "content33",
+          "img": "https://picsum.photos/200/300"
+        }
+      ]
+    }
+  ]
+}
