@@ -103,7 +103,7 @@ const StoryImage = styled.div`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  z-index: 2;
+  z-index: 0;
 
   img {
     width: 100%;
