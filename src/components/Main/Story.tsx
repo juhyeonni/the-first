@@ -1,5 +1,7 @@
+import { StoryType } from '@types/StoryType';
+import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -15,68 +17,26 @@ const variants = {
   click: {
     border: '3px dotted #fff',
     transition: {
-      // 추가된 부분
       border: {
         duration: 1,
         type: 'spring',
       },
     },
   },
+  imageClick: {
+    zIndex: 10,
+    scale: 100,
+    transition: {
+      duration: 1,
+      type: 'linear',
+    },
+  },
 };
 
-const Story = () => {
-  const [isHover, setIsHover] = useState(false);
-  const [isClick, setIsClick] = useState(false);
-  const navigate = useNavigate();
-
-  const onClick = () => {
-    setIsClick(!isClick);
-
-    setTimeout(() => {
-      setIsClick(false);
-      navigate('/story');
-    }, 500);
-  };
-
-  return (
-    <Container>
-      <Wrapper>
-        <StoryCard>
-          <StoryProfile
-            onMouseEnter={() => setIsHover(true)}
-            onMouseLeave={() => setIsHover(false)}
-            onClick={onClick}
-          >
-            <StroyCircle
-              variants={variants}
-              initial={false}
-              animate={[isHover ? 'hover' : '', isClick ? 'click' : '']}
-            />
-            <StoryImage>
-              <img src="https://picsum.photos/200/300" alt="" />
-            </StoryImage>
-          </StoryProfile>
-
-          <StoryName>name</StoryName>
-        </StoryCard>
-
-        <StoryCard>
-          <StoryProfile>
-            <StroyCircle />
-            <StoryImage>
-              <img src="https://picsum.photos/200/300" alt="" />
-            </StoryImage>
-          </StoryProfile>
-          <StoryName>name</StoryName>
-        </StoryCard>
-      </Wrapper>
-    </Container>
-  );
-};
-
-export default Story;
-
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100%;
+  margin-top: 2rem;
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -99,24 +59,26 @@ const StoryProfile = styled.div`
   margin-bottom: 0.4rem;
 `;
 
-const StoryImage = styled.div`
+const StoryImage = styled(motion.div)<{ isClick?: boolean }>`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
   z-index: 0;
+  overflow: hidden;
+  background-color: #fff;
 
   img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
+    opacity: ${({ isClick }) => (isClick ? 0 : 1)};
   }
 `;
 
 const StroyCircle = styled(motion.div)`
   position: absolute;
-  width: 4rem;
-  height: 4rem;
+  width: 4.1rem;
+  height: 4.1rem;
   box-sizing: border-box;
   border: 3px solid transparent;
   border-radius: 50%;
@@ -133,3 +95,67 @@ const StoryName = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+function Story() {
+  const [hoveredStory, setHoveredStory] = useState<number | null>(null);
+  const [clickedStory, setClickedStory] = useState<number | null>(null);
+  const [story, setStory] = useState<StoryType[]>([]);
+  const navigate = useNavigate();
+
+  const getStory = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:3000/story');
+      setStory(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStory();
+  }, []);
+
+  return (
+    <Container>
+      <Wrapper>
+        {story?.map((item) => (
+          <StoryCard key={item.id}>
+            <StoryProfile
+              onMouseEnter={() => setHoveredStory(item.id)}
+              onMouseLeave={() => setHoveredStory(null)}
+              onClick={() => {
+                setClickedStory(item.id);
+                setTimeout(() => {
+                  setClickedStory(null);
+                  navigate(`/story/${item.id - 1}`);
+                }, 500);
+              }}
+            >
+              <StroyCircle
+                variants={variants}
+                initial={false}
+                animate={
+                  (hoveredStory === item.id ? 'hover' : '') ||
+                  (clickedStory === item.id ? 'click' : '')
+                }
+              />
+
+              <StoryImage
+                variants={variants}
+                initial={false}
+                animate={clickedStory === item.id ? 'imageClick' : ''}
+                isClick={clickedStory === item.id}
+              >
+                <img src={item.img} alt="" />
+              </StoryImage>
+            </StoryProfile>
+
+            <StoryName>{item.name}</StoryName>
+          </StoryCard>
+        ))}
+      </Wrapper>
+    </Container>
+  );
+}
+
+export default Story;
