@@ -63,7 +63,7 @@ const StoryImage = styled(motion.div)<{ isClick?: boolean }>`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  z-index: 2;
+  z-index: 0;
   overflow: hidden;
   background-color: #fff;
 

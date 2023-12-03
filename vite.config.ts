@@ -41,6 +41,10 @@ export default defineConfig({
         replacement: resolve(__dirname, 'src/interfaces'),
       },
       {
+        find: '@styles',
+        replacement: resolve(__dirname, 'src/styles'),
+      },
+      {
         find: '@',
         replacement: resolve(__dirname, 'src'),
       },
