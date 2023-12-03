@@ -43,6 +43,8 @@ module.exports = {
       },
     ],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-unresolved': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
   settings: {
     'import/parsers': {

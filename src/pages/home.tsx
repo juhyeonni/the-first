@@ -3,6 +3,14 @@ import Left from '@components/Left';
 import Right from '@components/Right';
 import styled from 'styled-components';
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ccc;
+`;
+
 function HomePage() {
   return (
     <Container>
@@ -17,10 +25,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  width: 100vw;
-`;
