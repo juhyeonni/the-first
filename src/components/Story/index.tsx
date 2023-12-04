@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Mousewheel } from 'swiper/modules';
+import { Mousewheel, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { StoryContentType } from '@/types/StoryType.ts';
+import { StoryContentType } from '@/types/StoryType';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -38,7 +38,12 @@ const Slide = styled(SwiperSlide)`
 
 function SwiperBox({ data }: SwiperBoxProps) {
   return (
-    <SwiperContainer modules={[Mousewheel]} mousewheel allowTouchMove={false}>
+    <SwiperContainer
+      modules={[Mousewheel, Navigation]}
+      mousewheel
+      allowTouchMove={false}
+      navigation
+    >
       {data?.map((item) => (
         <Slide key={item.id}>
           <img src={item.img} alt="" />
