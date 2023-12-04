@@ -1,19 +1,50 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import React, { useState, Component } from 'react';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  faEllipsis,
+  faHeart as solidHeart,
+} from '@fortawesome/free-solid-svg-icons';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  faHeart as regularHeart,
+  faComment,
+} from '@fortawesome/free-regular-svg-icons';
+
+// 캐러셀
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
+
+//  바운스 키프레임
+const bounceAnimation = keyframes`
+  0%, 100% {
+    transform: scale(1.0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+`;
+
+// FontAwesomeIcon에 바운스 적용
+const StyledSolidHeart = styled(FontAwesomeIcon)`
+  animation: ${(props) =>
+    props.bounce
+      ? css`
+          ${bounceAnimation} 1s infinite
+        `
+      : 'none'};
+`;
 
 const StyledMainCard = styled.div`
   /* 전체 Main div */
   margin-top: 30px;
   align-items: flex-start;
-  /* border: 5.56px solid;
-  border-color: #000000; */
-  /* border-radius: 15.75px; */
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -21,6 +52,7 @@ const StyledMainCard = styled.div`
   height: auto;
   width: 550px;
   box-sizing: content-box;
+  margin-bottom: 100px;
 
   /* 🟢 1 Top. top 전체 감싸는 div  */
   & .element-top {
@@ -51,22 +83,15 @@ const StyledMainCard = styled.div`
   & .element-userImg {
     width: 100%;
     height: 100%;
-    /* position: absolute; */
     object-fit: cover;
   }
 
   /* 🟢 1.2 Top. 아이디 wrap div */
   & .element-account {
-    /* align-items: flex-start; */
-    /* justify-content: center; */
-    /* display: flex; */
     flex-direction: column;
-    /* gap: 9.27px; */
-    /* height: 85.26px; */
     padding: 9.27px 9.27px 9.27px 10.01px;
     position: relative;
     width: 77%;
-    /* background-color: red; */
   }
 
   /* 1.2.1 Top. 아이디 입력 상자  */
@@ -75,8 +100,16 @@ const StyledMainCard = styled.div`
     font-weight: 600;
   }
 
-  /* 1.3 Top. 우측 상단 ・・・ 이미지 */
+  /* 1.3 Top. 우측 상단 ・・・ 아이콘 */
   & .element-threeDot {
+    height: 40px;
+    position: relative;
+    width: 40px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  & .faEllipsis {
     height: 40px;
     position: relative;
     width: 40px;
@@ -88,18 +121,15 @@ const StyledMainCard = styled.div`
   & .mainImg_container {
     width: 100%;
     height: 100%;
-    /* width: 550px;
-    height: 500px; */
     margin-bottom: 10px;
     background-color: white;
-
-    /* overflow: hidden; */
   }
 
   & .mainImg_box {
     display: flex; // 추가
     align-items: center; // 추가
   }
+
   & .mainImg_box img {
     width: 100%;
     height: 100%;
@@ -108,16 +138,29 @@ const StyledMainCard = styled.div`
   }
 
   & .element-wrap-image {
-    display: flex; // 플렉스
+    display: flex;
     margin-bottom: 10px;
   }
 
-  & .element-icons {
-    align-self: stretch;
-    height: 50px;
-    margin-right: 30px;
-    position: relative;
-    width: 100%;
+  /* 하트 아이콘 */
+  & .solidHeart {
+    color: #ff0000;
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+  }
+  /* 빈하트 아이콘 */
+  & .regularHeart {
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+  }
+  /* 코멘트 아이콘 */
+  & .comment {
+    height: 60px;
+    width: 60px;
+    margin-left: 30px;
+    cursor: pointer;
   }
 
   /*  아이디 + 작성 내용 ...* */
@@ -126,7 +169,6 @@ const StyledMainCard = styled.div`
     margin-bottom: 20px;
     border-radius: 4.63px;
     display: block;
-    /* gap: 12.52px; */
 
     position: relative;
     width: 100%;
@@ -278,17 +320,27 @@ const StyledSlider = styled(Slider)`
   }
 `; /* 🟡 캐러셀 스타일링 終🟡 */
 
-/* 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢  MainCard 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢  */
+/* ------------------------------------------------------  MainCard ------------------------------------------------------  */
 const MainCard = (): JSX.Element => {
-  /* ✏️ 게시글 더보기 */
-  const [isTextShown, setIsTextShown] = useState(false);
+  /*  📝 사용자 게시글 입력 */
   const textContent =
-    /*  🟡 사용자 게시글 입력 🟡 */
     '★ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。';
   const maxLength = 30; // 원하는 글자 수
 
-  /* ✏️ 하트 표시 */
+  /* 📂 게시글 flug */
+  const [isTextShown, setIsTextShown] = useState(false);
+
+  /* 📂 하트 flug  */
   const [isHeartShown, setIsHeartShown] = useState(false);
+
+  /* 📂 바운스 flug */
+  const [bounce, setBounce] = useState(false);
+
+  const heartFlug = () => {
+    setIsHeartShown((prev) => {
+      return !prev;
+    });
+  };
 
   return (
     <StyledMainCard>
@@ -318,10 +370,15 @@ const MainCard = (): JSX.Element => {
         </div>
 
         {/* 1.3 우측 상단 점 3개 */}
-        <img
+        {/* <img
           className="element-threeDot"
           alt="Element threeDot"
           src="/main_imgs/three_dot.png"
+        /> */}
+        <FontAwesomeIcon
+          className="faEllipsis"
+          icon={faEllipsis}
+          style={{ color: '#000000' }}
         />
       </div>
 
@@ -363,19 +420,35 @@ const MainCard = (): JSX.Element => {
 
       {/* 🟢 3. 좋아요  + 게시글 모달 🟢 */}
       <div className="element-wrap-image">
-        {/* 3.1 좋아요 img */}
-        <img
-          className="element-icons"
-          alt="Element icons"
-          src="/main_imgs/heart_off.png"
-          style={{ cursor: 'pointer' }}
-        />
-        {/* 3.2 게시글 모달 img */}
-        <img
-          className="element-icons"
-          alt="Element icons"
-          src="/main_imgs/question.png"
-          style={{ cursor: 'pointer' }}
+        {/* 3.1 좋아요  */}
+        {isHeartShown ? (
+          /* 3.1.1 ♡ */
+          <FontAwesomeIcon
+            bounce={bounce}
+            className="solidHeart"
+            icon={solidHeart}
+            onClick={() => {
+              heartFlug();
+            }}
+          />
+        ) : (
+          /* 3.1.2 ❤️ */
+          <StyledSolidHeart
+            className="regularHeart"
+            icon={regularHeart}
+            onClick={() => {
+              heartFlug();
+              setBounce(true);
+              setTimeout(() => setBounce(false), 1000);
+            }}
+          />
+        )}
+
+        {/* 3.2  🔍 */}
+        <FontAwesomeIcon
+          className="comment"
+          icon={faComment}
+          flip="horizontal"
         />
       </div>
 
