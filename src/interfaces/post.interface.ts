@@ -1,6 +1,7 @@
 export interface Post {
   id: number;
-  title: string;
+  imgs: string[];
+  heart: boolean;
   content: string;
   userId: number;
   tags?: string[];
@@ -28,7 +29,8 @@ export interface User {
 // 🟡 포스트 + 유저
 export interface PostAndUser {
   id: number;
-  title: string;
+  imgs: string[];
+  heart: boolean;
   content: string;
   userId: number;
   tags?: string[];
