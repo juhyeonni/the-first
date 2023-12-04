@@ -18,7 +18,7 @@ export async function getPosts(): Promise<Post[]> {
 }
 
 // 🟡 posts와 users를 관계 쿼리 : posts와 users 같이 나옴 🟡
-// src / components / Main / index.tsx 에서 사용중
+// src / components / Main / index.tsx 에서 사용 중
 export async function getPostsUsers(): Promise<PostAndUser[]> {
   const res = await axios.get('/posts?_expand=user');
   return res.data;
