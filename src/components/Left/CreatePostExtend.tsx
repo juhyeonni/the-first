@@ -260,7 +260,10 @@ const BackgroundLayer = styled.div<{ $open?: boolean }>`
   width: 100%;
   height: 100%;
 
+  z-index: 100;
+
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
 `;
 
 const ImageContainer = styled.div`
