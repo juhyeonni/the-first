@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
 import PlusIcon from '@assets/icons/plus';
+import { convertURLtoFile } from '@utils/file';
 
 interface CreatePostExtendProps {
   open?: boolean;
@@ -52,6 +53,10 @@ const usePhotos = () => {
     clear: () => setPhotos([]),
     remove: (index: number) => {
       setPhotos((p) => p.filter((_, i) => i !== index));
+    },
+    addUrl: async (url: string) => {
+      const newPhoto = await convertURLtoFile(url);
+      setPhotos((p) => [...p, newPhoto]);
     },
   };
 
@@ -166,6 +171,14 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
                         accept="image/*"
                         onChange={photoHandler.add}
                       />
+                      {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
+                      <button
+                        onClick={() =>
+                          photoHandler.addUrl('http://github.com/juhyeonni.png')
+                        }
+                      >
+                        sdfasdf
+                      </button>
                     </AddPhoto>
                   </ImageContainer>
                   <VrLine />
