@@ -1,8 +1,8 @@
-import axios from '@axios';
+import { baseAxios } from '@axios';
 import { Tag } from '@interfaces/tag.interface';
 
 export async function getTags(): Promise<Tag[]> {
-  const res = await axios.get(`/tags`);
+  const res = await baseAxios.get(`/tags`);
   return res.data;
 }
 
@@ -17,7 +17,7 @@ export async function createTags(tags: string[]) {
   console.log(newTags);
 
   newTags.forEach(async (tag) => {
-    const res = await axios.post(`/tags`, {
+    const res = await baseAxios.post(`/tags`, {
       name: tag,
     });
   });
