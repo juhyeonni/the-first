@@ -1,8 +1,10 @@
 /* --------------------------------------import-------------------------------------- */
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
+import { patchHeart } from '@services/posts.service';
+import axios from 'axios'; // axios import
 
-/* 폰트 어썸 */
+/* 📎폰트 어썸 */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -16,40 +18,49 @@ import {
   faComment,
 } from '@fortawesome/free-regular-svg-icons';
 
-/* 캐러셀 */
+/* 📎캐러셀 */
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
-/*  */
+/* 📎 인터페이스 : MainCardProps */
 import { PostAndUser } from '@interfaces/post.interface';
+
+/* --------------------------------------import-------------------------------------- */
 
 interface MainCardProps {
   post: PostAndUser;
 }
-/* --------------------------------------import-------------------------------------- */
 
 /* -------------------------------------MainCard------------------------------------- */
 const MainCard = ({ post }: MainCardProps): JSX.Element => {
   /*  📝 사용자 게시글 입력 */
-  const textContent =
-    '★ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。';
+  const textContent = post.content;
   const maxLength = 30; // 원하는 글자 수
 
   /* 📂 게시글 flug */
   const [isTextShown, setIsTextShown] = useState(false);
 
   /* 📂 하트 flug  */
-  const [isHeartShown, setIsHeartShown] = useState(false);
+  const [isHeartShown, setIsHeartShown] = useState(post.heart);
 
   /* 📂 바운스 flug */
   const [bounce, setBounce] = useState(false);
 
-  const heartFlug = () => {
-    setIsHeartShown((prev) => {
-      return !prev;
-    });
+  const toggleHeart = () => {
+    setIsHeartShown((prev) => !prev);
   };
+
+  // 하트 변경 patch.
+  const changeHeart = async () => {
+    const res = await patchHeart({ ...post, heart: isHeartShown });
+    console.log(res);
+    console.log(isHeartShown);
+  };
+
+  useEffect(() => {
+    changeHeart();
+  }, [isHeartShown]);
 
   return (
     <StyledMainCard>
@@ -57,17 +68,17 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       <div className="element-top">
         {/* 1.1 상단 좌측 유저 이미지 */}
         <div className="element-image">
-          <img /* 🟡 사용자 이미지 입력 🟡  */
+          <img
             className="element-userImg"
             alt="Element userImg"
-            src="/main_imgs/blue_giant.png"
+            src={post.user.avatar} /* 🟡 사용자 이미지 입력 🟡  */
           />
         </div>
 
         {/* 1.2 상단 좌측 아이디 */}
         <div className="element-account">
           <span className="userId">
-            cheiru94 {/* <- 🟡 사용자 아이디 입력 🟡 */}
+            {post.user.name} {/* 🟡 사용자 아이디 입력 🟡 */}
             {/* 1.2.1 파란색 체크 이미지 */}
             <img
               className="element-userImg"
@@ -78,12 +89,7 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
           </span>
         </div>
 
-        {/* 1.3 우측 상단 점 3개 */}
-        {/* <img
-          className="element-threeDot"
-          alt="Element threeDot"
-          src="/main_imgs/three_dot.png"
-        /> */}
+        {/* 1.3 우측 상단 ・・・ 아이콘 */}
         <FontAwesomeIcon
           className="faEllipsis"
           icon={faEllipsis}
@@ -97,34 +103,15 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StyledSlider {...settings}>
           {/* 🟡 map 메서드로 , 게시 사진 수 만큼 생성 🟡 */}
-          <div className="mainImg_box">
-            <img
-              className="element-userImg"
-              alt="Element userImg"
-              src="/main_imgs/blue_note1.png"
-            />
-          </div>
-          <div className="mainImg_box">
-            <img
-              className="element-userImg"
-              alt="Element userImg"
-              src="/main_imgs/blue_note2.png"
-            />
-          </div>
-          <div className="mainImg_box">
-            <img
-              className="element-userImg"
-              alt="Element userImg"
-              src="/main_imgs/blue_note3.jpeg"
-            />
-          </div>
-          <div className="mainImg_box">
-            <img
-              className="element-userImg"
-              alt="Element userImg"
-              src="/main_imgs/blue_note4.jpeg"
-            />
-          </div>
+          {post.imgs.map((img) => (
+            <div key={post.id} className="mainImg_box">
+              <img
+                className="element-userImg"
+                alt="Element userImg"
+                src={img}
+              />
+            </div>
+          ))}
         </StyledSlider>
       </div>
 
@@ -132,22 +119,20 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       <div className="element-wrap-image">
         {/* 3.1 좋아요  */}
         {isHeartShown ? (
-          /* 3.1.1 ♡ */
+          /* 3.1.1 ❤️ */
           <FontAwesomeIcon
             bounce={bounce}
             className="solidHeart"
             icon={solidHeart}
-            onClick={() => {
-              heartFlug();
-            }}
+            onClick={toggleHeart}
           />
         ) : (
-          /* 3.1.2 ❤️ */
+          /* 3.1.2 ♡ */
           <StyledSolidHeart
             className="regularHeart"
             icon={regularHeart}
             onClick={() => {
-              heartFlug();
+              toggleHeart();
               setBounce(true);
               setTimeout(() => setBounce(false), 1000);
             }}
@@ -170,12 +155,18 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
 
         {/* 4.2 게시글 내용 */}
         <span className="element-contents">
-          {isTextShown
-            ? textContent
-            : `${textContent.substring(0, maxLength)}...`}
-          <button type="button" onClick={() => setIsTextShown(!isTextShown)}>
-            {isTextShown ? '접기' : '더보기'}
-          </button>
+          {/* 30글자 이상일 시 더보기 or 닫기 toggle */}
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {textContent.length > maxLength
+            ? isTextShown
+              ? textContent
+              : `${textContent.substring(0, maxLength)}...`
+            : textContent}
+          {textContent.length > maxLength && (
+            <button type="button" onClick={() => setIsTextShown(!isTextShown)}>
+              {isTextShown ? '접기' : '더보기'}
+            </button>
+          )}
         </span>
       </div>
 
@@ -294,7 +285,7 @@ const StyledMainCard = styled.div`
   /* 🟢🟢🟢🟢🟢🟢 2 Main. 메인 이미지 🟢🟢🟢🟢🟢🟢*/
   & .mainImg_container {
     width: 100%;
-    height: 100%;
+    height: 500px;
     margin-bottom: 10px;
     background-color: white;
   }
@@ -306,8 +297,8 @@ const StyledMainCard = styled.div`
 
   & .mainImg_box img {
     width: 100%;
-    height: 100%;
-
+    height: 500px;
+    object-fit: cover;
     border-radius: 5px;
   }
 
