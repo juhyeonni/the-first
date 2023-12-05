@@ -62,24 +62,6 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   const [text, textHandler] = useText();
   const [flow, flowHandler] = useFlow();
   const [photos, photoHandler] = usePhotos();
-  const containerVariants = {
-    open: {
-      scale: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 220,
-        damping: 20,
-      },
-    },
-    closed: {
-      scale: 0.5,
-      transition: {
-        type: 'spring',
-        stiffness: 120,
-        damping: 20,
-      },
-    },
-  };
 
   useEffect(() => {
     console.log('TEST; photos: ', photos);
@@ -213,6 +195,24 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
 
 export default CreatePostExtend;
 
+const containerVariants = {
+  open: {
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 220,
+      damping: 20,
+    },
+  },
+  closed: {
+    scale: 0.5,
+    transition: {
+      type: 'spring',
+      stiffness: 120,
+      damping: 20,
+    },
+  },
+};
 const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
