@@ -44,10 +44,6 @@ const usePhotos = () => {
   const [photos, setPhotos] = useState<File[]>([]);
 
   const handler = {
-    input: (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target?.files) return;
-      setPhotos(Array.from(e.target.files));
-    },
     add: (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!e.target?.files) return;
       const newPhotos = Array.from(e.target.files);
@@ -156,7 +152,7 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
                       hidden
                       accept="image/*"
                       onChange={(e) => {
-                        photoHandler.input(e);
+                        photoHandler.add(e);
                         flowHandler.next();
                       }}
                     />
