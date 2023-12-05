@@ -31,11 +31,12 @@ export async function getPostsUsers(): Promise<PostAndUser[]> {
 }
 
 // 하트 patch
-export async function patchHeart(heart: {
+export async function patchHeart(post: {
+  id: number;
   heart: boolean;
 }): Promise<PostAndUser[]> {
   // eslint-disable-next-line prefer-template
-  const res = await axios.patch('/posts/1', heart);
-
+  // const res = await axios.patch('/posts/1', heart);
+  const res = await axios.patch(`/posts/${post.id}`, post);
   return res.data;
 }
