@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SwiperBox from '@components/Story';
-import axios from 'axios';
+import { baseAxios } from '@axios';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -74,7 +74,7 @@ function StoryPage() {
   const navigate = useNavigate();
 
   const getData = async () => {
-    const res = await axios.get('http://localhost:3000/story');
+    const res = await baseAxios.get('/story');
     setStory(res.data);
   };
 

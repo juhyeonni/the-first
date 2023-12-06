@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
 import PlusIcon from '@assets/icons/plus';
+import { convertURLtoFile } from '@utils/file';
 
 interface CreatePostExtendProps {
   open?: boolean;
@@ -44,10 +45,6 @@ const usePhotos = () => {
   const [photos, setPhotos] = useState<File[]>([]);
 
   const handler = {
-    input: (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target?.files) return;
-      setPhotos(Array.from(e.target.files));
-    },
     add: (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!e.target?.files) return;
       const newPhotos = Array.from(e.target.files);
@@ -56,6 +53,10 @@ const usePhotos = () => {
     clear: () => setPhotos([]),
     remove: (index: number) => {
       setPhotos((p) => p.filter((_, i) => i !== index));
+    },
+    addUrl: async (url: string) => {
+      const newPhoto = await convertURLtoFile(url);
+      setPhotos((p) => [...p, newPhoto]);
     },
   };
 
@@ -66,24 +67,6 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   const [text, textHandler] = useText();
   const [flow, flowHandler] = useFlow();
   const [photos, photoHandler] = usePhotos();
-  const containerVariants = {
-    open: {
-      scale: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 220,
-        damping: 20,
-      },
-    },
-    closed: {
-      scale: 0.5,
-      transition: {
-        type: 'spring',
-        stiffness: 120,
-        damping: 20,
-      },
-    },
-  };
 
   useEffect(() => {
     console.log('TEST; photos: ', photos);
@@ -156,7 +139,7 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
                       hidden
                       accept="image/*"
                       onChange={(e) => {
-                        photoHandler.input(e);
+                        photoHandler.add(e);
                         flowHandler.next();
                       }}
                     />
@@ -188,6 +171,14 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
                         accept="image/*"
                         onChange={photoHandler.add}
                       />
+                      {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
+                      <button
+                        onClick={() =>
+                          photoHandler.addUrl('http://github.com/juhyeonni.png')
+                        }
+                      >
+                        sdfasdf
+                      </button>
                     </AddPhoto>
                   </ImageContainer>
                   <VrLine />
@@ -217,6 +208,24 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
 
 export default CreatePostExtend;
 
+const containerVariants = {
+  open: {
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 220,
+      damping: 20,
+    },
+  },
+  closed: {
+    scale: 0.5,
+    transition: {
+      type: 'spring',
+      stiffness: 120,
+      damping: 20,
+    },
+  },
+};
 const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -264,7 +273,10 @@ const BackgroundLayer = styled.div<{ $open?: boolean }>`
   width: 100%;
   height: 100%;
 
+  z-index: 100;
+
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
 `;
 
 const ImageContainer = styled.div`
