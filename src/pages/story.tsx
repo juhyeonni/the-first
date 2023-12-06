@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SwiperBox from '@components/Story';
 import { baseAxios } from '@axios';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -51,7 +51,7 @@ const Card = styled(motion.div)`
   cursor: pointer;
   position: absolute;
   width: 30rem;
-  height: 50rem;
+  height: 90vh;
   background-color: red;
   border-radius: 4vmin;
   display: flex;
@@ -61,6 +61,54 @@ const Card = styled(motion.div)`
   box-shadow:
     0 2px 3px rgba(0, 0, 0, 0.1),
     0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+
+const PrevButton = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  left: -10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer;
+
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1rem;
+  background-color: #c2c2c2;
+  border-radius: 50%;
+`;
+
+const NextButton = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer;
+
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1rem;
+  background-color: #c2c2c2;
+  border-radius: 50%;
+`;
+
+const CancelButton = styled(motion.div)`
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer;
+
+  font-size: 3rem;
+  border-radius: 50%;
 `;
 
 function StoryPage() {
@@ -84,8 +132,8 @@ function StoryPage() {
 
   const showNextSlide = () => {
     setFirst(false);
-    if (visibleIndex === story?.length - 1) return;
-    setVisibleIndex((prev) => (prev === story?.length - 1 ? prev : prev + 1));
+    if (visibleIndex === story.length - 1) return;
+    setVisibleIndex((prev) => (prev === story.length - 1 ? prev : prev + 1));
     setDirection('next');
     navigate(`/story/${visibleIndex + 1}`);
   };
@@ -135,10 +183,35 @@ function StoryPage() {
                 }}
               >
                 <SwiperBox data={post.content} />
+                {visibleIndex === 0 ? null : (
+                  <PrevButton
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => showPrevSlide()}
+                    exit={{ opacity: 0 }}
+                  >
+                    {'<'}
+                  </PrevButton>
+                )}
+                {visibleIndex === story.length - 1 ? null : (
+                  <NextButton
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => showNextSlide()}
+                    exit={{ opacity: 0 }}
+                  >
+                    {'>'}
+                  </NextButton>
+                )}
               </Card>
             )
         )}
       </AnimatePresence>
+      <CancelButton
+        whileTap={{ scale: 0.9 }}
+        onClick={() => navigate('/')}
+        exit={{ opacity: 0 }}
+      >
+        X
+      </CancelButton>
     </Container>
   );
 }

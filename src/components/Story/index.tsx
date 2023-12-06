@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Mousewheel } from 'swiper/modules';
+import { Mousewheel, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { StoryContentType } from '@/types/StoryType.ts';
+import { StoryContentType } from '@/types/StoryType';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -36,11 +36,40 @@ const Slide = styled(SwiperSlide)`
   }
 `;
 
+const Text = styled.textarea`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  padding-bottom: 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.3);
+  resize: none;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+  line-height: 1.5;
+  min-width: 100%;
+  min-height: 100%;
+`;
+
 function SwiperBox({ data }: SwiperBoxProps) {
   return (
-    <SwiperContainer modules={[Mousewheel]} mousewheel allowTouchMove={false}>
+    <SwiperContainer
+      modules={[Mousewheel, Navigation]}
+      mousewheel
+      allowTouchMove={false}
+      navigation
+    >
       {data?.map((item) => (
         <Slide key={item.id}>
+          <Text>{item.text}</Text>
           <img src={item.img} alt="" />
         </Slide>
       ))}

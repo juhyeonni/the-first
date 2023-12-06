@@ -50,4 +50,13 @@ export default defineConfig({
       },
     ],
   },
+  server: {
+    proxy: {
+      '/naver': {
+        target: 'https://openapi.naver.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/naver/, ''),
+      },
+    },
+  },
 });

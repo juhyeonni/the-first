@@ -1,10 +1,13 @@
 import { Ref, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import PlusIcon from '@assets/icons/plus';
+import { ImageListType } from '@types/StoryType';
+import axios from 'axios';
+import { convertURLtoFile } from '@utils/file';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
-import PlusIcon from '@assets/icons/plus';
-import { convertURLtoFile } from '@utils/file';
+import ImageModal from './ImageModal';
 
 interface CreatePostExtendProps {
   open?: boolean;
@@ -41,7 +44,7 @@ const useFlow = () => {
   return [flow, handler] as const;
 };
 
-const usePhotos = () => {
+export const usePhotos = () => {
   const [photos, setPhotos] = useState<File[]>([]);
 
   const handler = {
@@ -67,12 +70,32 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   const [text, textHandler] = useText();
   const [flow, flowHandler] = useFlow();
   const [photos, photoHandler] = usePhotos();
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [image, setImage] = useState<ImageListType[]>([]);
+  const [input, setInput] = useState<string>('');
 
   useEffect(() => {
     console.log('TEST; photos: ', photos);
 
     if (photos.length === 0 && flow === PostFlow.Form) flowHandler.prev();
   }, [photos]);
+
+  const getImage = async (query: string) => {
+    try {
+      const { data } = await axios.get(
+        `/naver/v1/search/image?query=${query}&display=10&start=1&sort=sim`,
+        {
+          headers: {
+            'X-Naver-Client-Id': import.meta.env.VITE_NAVER_CLIENT_ID,
+            'X-Naver-Client-Secret': import.meta.env.VITE_NAVER_CLIENT_SECRET,
+          },
+        }
+      );
+      setImage(data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handler = {
     post: () => {
@@ -81,128 +104,150 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
     },
   };
 
+  const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const onSearch = () => {
+    setModalIsOpen(true);
+    getImage(input);
+  };
+
   return (
-    <>
-      <BackgroundLayer ref={props.observe} $open={props.open}>
-        <Container
-          variants={containerVariants}
-          initial="closed"
-          animate={props.open ? 'open' : 'closed'}
-          layout="preserve-aspect"
-        >
-          <Header>
-            {flow === PostFlow.Photo && (
-              <>
-                <div />
-                <h3>새 게시물 만들기</h3>
-                <div />
-              </>
-            )}
-            {flow === PostFlow.Form && (
-              <>
-                <button onClick={flowHandler.prev}>{'<'}</button>
-                <h3>게시물 만들기</h3>
-                <button onClick={handler.post}>공유</button>
-              </>
-            )}
-          </Header>
+    <BackgroundLayer ref={props.observe} $open={props.open}>
+      <Container
+        variants={containerVariants}
+        initial="closed"
+        animate={props.open ? 'open' : 'closed'}
+        layout="preserve-aspect"
+      >
+        <Header>
+          {flow === PostFlow.Photo && (
+            <>
+              <div />
+              <h3>새 게시물 만들기</h3>
+              <div />
+            </>
+          )}
+          {flow === PostFlow.Form && (
+            <>
+              <button onClick={flowHandler.prev}>{'<'}</button>
+              <h3>게시물 만들기</h3>
+              <button onClick={handler.post}>공유</button>
+            </>
+          )}
+        </Header>
 
-          <HrLine />
-          <Content>
-            {flow === PostFlow.Photo && (
-              <>
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '360px',
-                    height: '360px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+        <HrLine />
+        <Content>
+          {flow === PostFlow.Photo && (
+            <div
+              style={{
+                display: 'flex',
+                width: '360px',
+                height: '360px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative',
+              }}
+            >
+              <label
+                htmlFor="photos"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  rowGap: '1rem',
+                  cursor: 'pointer',
+                }}
+              >
+                <PlusIcon width={64} height={64} />
+                <span>컴퓨터에서 선택</span>
+                <input
+                  id="photos"
+                  type="file"
+                  multiple
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => {
+                    photoHandler.add(e);
+                    flowHandler.next();
                   }}
-                >
-                  <label
-                    htmlFor="photos"
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      rowGap: '1rem',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <PlusIcon width={64} height={64} />
-                    <span>컴퓨터에서 선택</span>
-                    <input
-                      id="photos"
-                      type="file"
-                      multiple
-                      hidden
-                      accept="image/*"
-                      onChange={(e) => {
-                        photoHandler.add(e);
-                        flowHandler.next();
-                      }}
-                    />
-                  </label>
-                </div>
-              </>
-            )}
+                />
+                <ImageSearch
+                  type="text"
+                  placeholder="이미지 검색"
+                  value={input}
+                  onChange={onInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      onSearch();
+                    }
+                  }}
+                />
+                <ImageModal
+                  isOpen={modalIsOpen}
+                  onClose={setModalIsOpen}
+                  image={image}
+                  handler={photoHandler}
+                  flowHandler={flowHandler}
+                />
+              </label>
+            </div>
+          )}
 
-            {flow === PostFlow.Form && (
-              <>
-                <div style={{ display: 'flex' }}>
-                  <ImageContainer>
-                    <ImageSlider
-                      images={photos}
-                      deleteHandler={(e) => {
-                        photoHandler.remove(e);
-                        if (photos.length === 0) flowHandler.prev();
-                      }}
-                    />
-                    <AddPhoto>
-                      <label htmlFor="photos">
-                        <PlusIcon />
-                      </label>
-                      <input
-                        id="photos"
-                        type="file"
-                        multiple
-                        hidden
-                        accept="image/*"
-                        onChange={photoHandler.add}
-                      />
-                      {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
-                      <button
-                        onClick={() =>
-                          photoHandler.addUrl('http://github.com/juhyeonni.png')
-                        }
-                      >
-                        sdfasdf
-                      </button>
-                    </AddPhoto>
-                  </ImageContainer>
-                  <VrLine />
-                  {/* user input form */}
-                  <UserInputForm>
-                    <Author>
-                      <div className="avatar">
-                        <img src="https://github.com/juhyeonni.png" alt="" />
-                      </div>
-                      <span>asdf</span>
-                    </Author>
-                    <div className="content">
-                      <InputArea text={text} textHandler={textHandler} />
-                    </div>
-                    <HrLine />
-                    <div className="placeinput"></div>
-                  </UserInputForm>
+          {flow === PostFlow.Form && (
+            <div style={{ display: 'flex' }}>
+              <ImageContainer>
+                <ImageSlider
+                  images={photos}
+                  deleteHandler={(e) => {
+                    photoHandler.remove(e);
+                    if (photos.length === 0) flowHandler.prev();
+                  }}
+                />
+                <AddPhoto>
+                  <label htmlFor="photos">
+                    <PlusIcon />
+                  </label>
+                  <input
+                    id="photos"
+                    type="file"
+                    multiple
+                    hidden
+                    accept="image/*"
+                    onChange={photoHandler.add}
+                  />
+                  {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
+                  {/* <button
+                    onClick={() =>
+                      photoHandler.addUrl('http://github.com/juhyeonni.png')
+                    }
+                  >
+                    sdfasdf
+                  </button> */}
+                </AddPhoto>
+              </ImageContainer>
+              <VrLine />
+              {/* user input form */}
+              <UserInputForm>
+                <Author>
+                  <div className="avatar">
+                    <img src="https://github.com/juhyeonni.png" alt="" />
+                  </div>
+                  <span>asdf</span>
+                </Author>
+                <div className="content">
+                  <InputArea text={text} textHandler={textHandler} />
                 </div>
-              </>
-            )}
-          </Content>
-        </Container>
-      </BackgroundLayer>
-    </>
+                <HrLine />
+                <div className="placeinput" />
+              </UserInputForm>
+            </div>
+          )}
+        </Content>
+      </Container>
+    </BackgroundLayer>
   );
 };
 
@@ -324,4 +369,14 @@ const AddPhoto = styled.div`
   & > label {
     cursor: pointer;
   }
+`;
+
+const ImageSearch = styled.input`
+  position: absolute;
+  bottom: 0.5rem;
+  width: 80%;
+  height: 2rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${({ theme }) => theme.lightTheme.borderColor};
 `;
