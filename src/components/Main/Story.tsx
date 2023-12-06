@@ -1,5 +1,5 @@
 import { StoryType } from '@/types/StoryType';
-import axios from 'axios';
+import { baseAxios } from '@axios';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -104,7 +104,7 @@ function Story() {
 
   const getStory = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/story');
+      const { data } = await baseAxios.get('/story');
       setStory(data);
     } catch (error) {
       console.log(error);

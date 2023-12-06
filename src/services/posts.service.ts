@@ -1,16 +1,16 @@
+import { baseAxios } from '@axios';
 import {
   Post,
   PostPayload,
   PostAndUser,
   User,
 } from '@interfaces/post.interface';
-import axios from '@axios';
 import { createTags } from './tags.service';
 
 export async function createPost(post: PostPayload) {
   if (post.tags) createTags(post.tags);
 
-  const res = await axios.post('/posts', {
+  const res = await baseAxios.post('/posts', {
     ...post,
     created_at: Date.now(),
     updated_at: Date.now(),
@@ -18,7 +18,7 @@ export async function createPost(post: PostPayload) {
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const res = await axios.get('/posts');
+  const res = await baseAxios.get('/posts');
   return res.data;
 }
 
@@ -26,7 +26,7 @@ export async function getPosts(): Promise<Post[]> {
 // src / components / Main / index.tsx 에서 사용 중
 export async function getPostsUsers(): Promise<PostAndUser[]> {
   // 반환하는 형은 Promise이고, 그 형태를 PostAndUser인터페이스 형식으로 맞추겠다
-  const res = await axios.get('/posts?_expand=user');
+  const res = await baseAxios.get('/posts?_expand=user');
   return res.data;
 }
 
@@ -37,6 +37,6 @@ export async function patchHeart(post: {
 }): Promise<PostAndUser[]> {
   // eslint-disable-next-line prefer-template
   // const res = await axios.patch('/posts/1', heart);
-  const res = await axios.patch(`/posts/${post.id}`, post);
+  const res = await baseAxios.patch(`/posts/${post.id}`, post);
   return res.data;
 }
