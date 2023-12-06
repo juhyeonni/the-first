@@ -1,4 +1,9 @@
-import { Post, PostPayload, PostAndUser } from '@interfaces/post.interface';
+import {
+  Post,
+  PostPayload,
+  PostAndUser,
+  User,
+} from '@interfaces/post.interface';
 import axios from '@axios';
 import { createTags } from './tags.service';
 
@@ -22,5 +27,16 @@ export async function getPosts(): Promise<Post[]> {
 export async function getPostsUsers(): Promise<PostAndUser[]> {
   // 반환하는 형은 Promise이고, 그 형태를 PostAndUser인터페이스 형식으로 맞추겠다
   const res = await axios.get('/posts?_expand=user');
+  return res.data;
+}
+
+// 하트 patch
+export async function patchHeart(post: {
+  id: number;
+  heart: boolean;
+}): Promise<PostAndUser[]> {
+  // eslint-disable-next-line prefer-template
+  // const res = await axios.patch('/posts/1', heart);
+  const res = await axios.patch(`/posts/${post.id}`, post);
   return res.data;
 }
