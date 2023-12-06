@@ -156,17 +156,20 @@
         {
           "id": 1,
           "name": "content11",
-          "img": "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg"
+          "img": "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg",
+          "text": "자기소개: 안녕하세요. 지훈입니다"
         },
         {
           "id": 2,
           "name": "content12",
-          "img": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+          "img": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
+          "text": "asfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaasfpasfkpaskfskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskfasfpasfkpaskf"
         },
         {
           "id": 3,
           "name": "content13",
-          "img": "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg"
+          "img": "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg",
+          "text": "text"
         }
       ]
     },
@@ -178,17 +181,20 @@
         {
           "id": 1,
           "name": "content21",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         },
         {
           "id": 2,
           "name": "content22",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         },
         {
           "id": 3,
           "name": "content23",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         }
       ]
     },
@@ -200,17 +206,20 @@
         {
           "id": 1,
           "name": "content31",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         },
         {
           "id": 2,
           "name": "content32",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         },
         {
           "id": 3,
           "name": "content33",
-          "img": "https://picsum.photos/200/300"
+          "img": "https://picsum.photos/200/300",
+          "text": "text"
         }
       ]
     }
