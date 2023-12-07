@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { PostAndUser } from '@interfaces/post.interface';
 import Story from './Story';
 import MainCard from './MainCard';
-// import { getPosts } from './your-service-file'; // getPosts 함수가 있는 파일로 경로를 수정해주세요.
 // eslint-disable-next-line import/order
 import { getPostsUsers } from '@services/posts.service';
 
@@ -15,7 +14,7 @@ const Main = () => {
     getPostsUsers()
       // eslint-disable-next-line no-shadow
       .then((posts) => {
-        console.log('getPostsUsers 작동');
+        console.log('index.tsx에서 getPostsUsers 작동');
         console.log(posts); // 가져온 포스트 출력
         setMainPosts(posts);
       })

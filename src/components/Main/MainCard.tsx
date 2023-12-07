@@ -2,7 +2,6 @@
 import React, { useState, Component, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { patchHeart } from '@services/posts.service';
-import axios from 'axios'; // axios import
 
 /* 📎폰트 어썸 */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -58,8 +57,8 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
   // 2.2 json 서버 제공
   const changeHeart = async () => {
     const res = await patchHeart({ ...post, heart: isHeartShown });
-    console.log(res);
-    console.log(isHeartShown);
+    // console.log('patchHeart의 결과: ', res);
+    return res;
   };
 
   // 2.3 json 서버 하트 변경
@@ -69,7 +68,6 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
 
   // FIXME: 코맨트 추가
   const handleCommentChange = (e) => {
-    // 댓글의 변화를 다루는 함수입니다.
     setPostComment(e.target.value);
     // console.log(postComment);
   };
@@ -163,7 +161,10 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       <div className="element-content">
         {/* 4.1 사용자 아이디 */}
         {/* 🟡 사용자 아이디 입력 🟡 */}
-        <span className="userId">cheiru94</span>
+        <span className="userId">
+          {/* cheiru94 */}
+          {post.user.username}
+        </span>
 
         {/* 4.2 게시글 내용 */}
         <span className="element-contents">
@@ -283,6 +284,7 @@ const StyledMainCard = styled.div`
   & .userId {
     font-size: 25px;
     font-weight: 600;
+    margin-right: 20px;
   }
 
   /* 1.3 Top. 우측 상단 ・・・ 아이콘 */
