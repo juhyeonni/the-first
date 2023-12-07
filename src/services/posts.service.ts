@@ -27,10 +27,12 @@ export async function getPosts(): Promise<Post[]> {
 export async function getPostsUsers(): Promise<PostAndUser[]> {
   // 반환하는 형은 Promise이고, 그 형태를 PostAndUser인터페이스 형식으로 맞추겠다
   const res = await baseAxios.get('/posts?_expand=user');
+  console.log('posts.service.ts에서 출력됨!!!!', res.data);
   return res.data;
 }
 
-// 하트 patch
+// 🟡 하트 patch 🟡
+// src / components / Main / MainCard.tsx 에서 사용 중
 export async function patchHeart(post: {
   id: number;
   heart: boolean;

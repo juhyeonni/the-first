@@ -27,14 +27,6 @@ export interface User {
 }
 
 // 🟡 포스트 + 유저
-export interface PostAndUser {
-  id: number;
-  imgs: string[];
-  heart: boolean;
-  content: string;
-  userId: number;
-  tags?: string[];
-  created_at: Date;
-  updated_at: Date;
+export interface PostAndUser extends Post {
   user: User; //  <- User 추가 🟡
 }
