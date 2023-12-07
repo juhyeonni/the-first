@@ -38,29 +38,41 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
   const textContent = post.content;
   const maxLength = 30; // 원하는 글자 수
 
-  /* 📂 게시글 flug */
+  /* 📂 1. 게시글 flug */
   const [isTextShown, setIsTextShown] = useState(false);
 
-  /* 📂 하트 flug  */
+  /* 📂 2. 하트 flug  */
   const [isHeartShown, setIsHeartShown] = useState(post.heart);
 
-  /* 📂 바운스 flug */
+  /* 📂 3. 바운스 flug */
   const [bounce, setBounce] = useState(false);
 
+  /* 📂 4. 게시글 코멘트 */
+  const [postComment, setPostComment] = useState('');
+
+  // 2.1 물리적 하트 변경
   const toggleHeart = () => {
     setIsHeartShown((prev) => !prev);
   };
 
-  // 하트 변경 patch.
+  // 2.2 json 서버 제공
   const changeHeart = async () => {
     const res = await patchHeart({ ...post, heart: isHeartShown });
     console.log(res);
     console.log(isHeartShown);
   };
 
+  // 2.3 json 서버 하트 변경
   useEffect(() => {
     changeHeart();
   }, [isHeartShown]);
+
+  // FIXME: 코맨트 추가
+  const handleCommentChange = (e) => {
+    // 댓글의 변화를 다루는 함수입니다.
+    setPostComment(e.target.value);
+    // console.log(postComment);
+  };
 
   return (
     <StyledMainCard>
@@ -173,9 +185,17 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       {/* 🟢 5. 댓글 달기  🟢 */}
       <div className="element-comment">
         <div className="element">
-          <textarea className="text-wrapper" placeholder="댓글 달기..." />
+          <textarea
+            className="text-wrapper"
+            placeholder="댓글 달기..."
+            onChange={handleCommentChange}
+          />
         </div>
-        <button type="button" className="element-upload">
+        <button
+          type="button"
+          className="element-upload"
+          // FIXME: 코맨트 추가
+        >
           게시
         </button>
       </div>
@@ -185,7 +205,7 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
 };
 /* -------------------------------------MainCard------------------------------------- */
 
-/* -------------------------------------Styled Component------------------------------------- */
+/* -------------------------------------💅💅Styled Component------------------------------------- */
 //  바운스 키프레임
 const bounceAnimation = keyframes`
   0%, 100% {
