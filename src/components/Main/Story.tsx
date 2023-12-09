@@ -33,6 +33,70 @@ const variants = {
   },
 };
 
+const Story = () => {
+  const [hoveredStory, setHoveredStory] = useState<number | null>(null);
+  const [clickedStory, setClickedStory] = useState<number | null>(null);
+  const [story, setStory] = useState<StoryType[]>([]);
+  const navigate = useNavigate();
+
+  const getStory = async () => {
+    try {
+      const { data } = await baseAxios.get('/story');
+      setStory(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStory();
+  }, []);
+
+  return (
+    <Container>
+      <Wrapper>
+        {story?.map((item) => (
+          <StoryCard key={item.id}>
+            <StoryProfile
+              onMouseEnter={() => setHoveredStory(item.id)}
+              onMouseLeave={() => setHoveredStory(null)}
+              onClick={() => {
+                setClickedStory(item.id);
+                setTimeout(() => {
+                  setClickedStory(null);
+                  navigate(`/story/${item.id - 1}`);
+                }, 500);
+              }}
+            >
+              <StroyCircle
+                variants={variants}
+                initial={false}
+                animate={
+                  (hoveredStory === item.id ? 'hover' : '') ||
+                  (clickedStory === item.id ? 'click' : '')
+                }
+              />
+
+              <StoryImage
+                variants={variants}
+                initial={false}
+                animate={clickedStory === item.id ? 'imageClick' : ''}
+                isClick={clickedStory === item.id}
+              >
+                <img src={item.img} alt="" />
+              </StoryImage>
+            </StoryProfile>
+
+            <StoryName>{item.name}</StoryName>
+          </StoryCard>
+        ))}
+      </Wrapper>
+    </Container>
+  );
+};
+
+export default Story;
+
 const Container = styled.div`
   width: 100%;
   margin-top: 2rem;
@@ -95,67 +159,3 @@ const StoryName = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-function Story() {
-  const [hoveredStory, setHoveredStory] = useState<number | null>(null);
-  const [clickedStory, setClickedStory] = useState<number | null>(null);
-  const [story, setStory] = useState<StoryType[]>([]);
-  const navigate = useNavigate();
-
-  const getStory = async () => {
-    try {
-      const { data } = await baseAxios.get('/story');
-      setStory(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getStory();
-  }, []);
-
-  return (
-    <Container>
-      <Wrapper>
-        {story?.map((item) => (
-          <StoryCard key={item.id}>
-            <StoryProfile
-              onMouseEnter={() => setHoveredStory(item.id)}
-              onMouseLeave={() => setHoveredStory(null)}
-              onClick={() => {
-                setClickedStory(item.id);
-                setTimeout(() => {
-                  setClickedStory(null);
-                  navigate(`/story/${item.id - 1}`);
-                }, 500);
-              }}
-            >
-              <StroyCircle
-                variants={variants}
-                initial={false}
-                animate={
-                  (hoveredStory === item.id ? 'hover' : '') ||
-                  (clickedStory === item.id ? 'click' : '')
-                }
-              />
-
-              <StoryImage
-                variants={variants}
-                initial={false}
-                animate={clickedStory === item.id ? 'imageClick' : ''}
-                isClick={clickedStory === item.id}
-              >
-                <img src={item.img} alt="" />
-              </StoryImage>
-            </StoryProfile>
-
-            <StoryName>{item.name}</StoryName>
-          </StoryCard>
-        ))}
-      </Wrapper>
-    </Container>
-  );
-}
-
-export default Story;
