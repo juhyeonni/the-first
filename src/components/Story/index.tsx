@@ -10,6 +10,26 @@ interface SwiperBoxProps {
   data: StoryContentType[];
 }
 
+function SwiperBox({ data }: SwiperBoxProps) {
+  return (
+    <SwiperContainer
+      modules={[Mousewheel, Navigation]}
+      mousewheel
+      allowTouchMove={false}
+      navigation
+    >
+      {data?.map((item) => (
+        <Slide key={item.id}>
+          <Text>{item.text}</Text>
+          <img src={item.img} alt="" />
+        </Slide>
+      ))}
+    </SwiperContainer>
+  );
+}
+
+export default SwiperBox;
+
 const SwiperContainer = styled(Swiper)`
   width: 100%;
   height: 100%;
@@ -58,23 +78,3 @@ const Text = styled.textarea`
   min-width: 100%;
   min-height: 100%;
 `;
-
-function SwiperBox({ data }: SwiperBoxProps) {
-  return (
-    <SwiperContainer
-      modules={[Mousewheel, Navigation]}
-      mousewheel
-      allowTouchMove={false}
-      navigation
-    >
-      {data?.map((item) => (
-        <Slide key={item.id}>
-          <Text>{item.text}</Text>
-          <img src={item.img} alt="" />
-        </Slide>
-      ))}
-    </SwiperContainer>
-  );
-}
-
-export default SwiperBox;

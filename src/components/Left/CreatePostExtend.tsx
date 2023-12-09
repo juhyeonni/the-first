@@ -2,9 +2,9 @@ import { Ref, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import PlusIcon from '@assets/icons/plus';
-import { ImageListType } from '@types/StoryType';
-import axios from 'axios';
+import { ImageListType } from '@/types/StoryType';
 import { convertURLtoFile } from '@utils/file';
+import getImages from '@services/imageSearch.service';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
 import ImageModal from './ImageModal';
@@ -81,20 +81,8 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   }, [photos]);
 
   const getImage = async (query: string) => {
-    try {
-      const { data } = await axios.get(
-        `/naver/v1/search/image?query=${query}&display=10&start=1&sort=sim`,
-        {
-          headers: {
-            'X-Naver-Client-Id': import.meta.env.VITE_NAVER_CLIENT_ID,
-            'X-Naver-Client-Secret': import.meta.env.VITE_NAVER_CLIENT_SECRET,
-          },
-        }
-      );
-      setImage(data.items);
-    } catch (error) {
-      console.log(error);
-    }
+    const data = await getImages(query);
+    setImage(data);
   };
 
   const handler = {
