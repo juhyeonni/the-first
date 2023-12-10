@@ -8,13 +8,10 @@ export async function getTags(): Promise<Tag[]> {
 
 export async function createTags(tags: string[]) {
   const originTags = await getTags();
-  console.log(originTags, tags);
 
   const newTags = tags.filter((tag) => {
     return !originTags.find((originTag) => originTag.name === tag);
   });
-
-  console.log(newTags);
 
   newTags.forEach(async (tag) => {
     const res = await baseAxios.post(`/tags`, {
