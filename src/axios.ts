@@ -12,3 +12,22 @@ export const baseAxios = OriginAxios.create({
 export const corsProxyAxios = OriginAxios.create({
   baseURL: import.meta.env.VITE_API_CORS_ANYWHERE,
 });
+
+export const thumbsnapAxios = OriginAxios.create({
+  baseURL: `${
+    import.meta.env.VITE_API_CORS_ANYWHERE
+  }/https://thumbsnap.com/api`,
+  transformRequest: [
+    (data, headers) => {
+      const newData = new FormData();
+
+      Object.keys(data).forEach((key) => {
+        newData.append(key, data[key]);
+      });
+
+      newData.append('key', import.meta.env.VITE_APP_THUMBSNAP_KEY);
+
+      return newData;
+    },
+  ],
+});
