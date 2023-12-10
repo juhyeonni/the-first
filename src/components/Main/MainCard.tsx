@@ -1,5 +1,5 @@
 /* --------------------------------------import-------------------------------------- */
-import React, { useState, Component, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { patchHeart } from '@services/posts.service';
 
@@ -23,12 +23,12 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
 /* 📎 인터페이스 : MainCardProps */
-import { PostAndUser } from '@interfaces/post.interface';
+import { PostWithUser } from '@interfaces/post.interface';
 
 /* --------------------------------------import-------------------------------------- */
 
 interface MainCardProps {
-  post: PostAndUser;
+  post: PostWithUser;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
@@ -113,12 +113,12 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StyledSlider {...settings}>
           {/* 🟡 map 메서드로 , 게시 사진 수 만큼 생성 🟡 */}
-          {post.imgs.map((img) => (
+          {post.photos.map((photo) => (
             <div key={post.id} className="mainImg_box">
               <img
                 className="element-userImg"
                 alt="Element userImg"
-                src={img}
+                src={photo}
               />
             </div>
           ))}
