@@ -16,16 +16,7 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 1,
-        "email": "cheiru94gmail.com",
-        "username": "ichiban",
-        "name": "재일",
-        "avatar": "https://github.com/cheiru94.png",
-        "bio": "칠전팔기, 이재일!",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
     },
     {
       "id": 2,
@@ -42,16 +33,7 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 2,
-        "email": "l.juhyeonni@gmail.com",
-        "username": "juhyeonni",
-        "name": "주현",
-        "avatar": "https://github.com/juhyeonni.png",
-        "bio": "안녕하세요. 주현입니다.",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
     },
     {
       "id": 3,
@@ -60,7 +42,7 @@
         "https://cdn.pixabay.com/photo/2018/06/13/18/20/waves-3473335_1280.jpg",
         "https://cdn.pixabay.com/photo/2016/03/04/19/36/beach-1236581_1280.jpg"
       ],
-      "heart": true,
+      "heart": false,
       "userId": 3,
       "placeId": 1,
       "tags": [
@@ -68,16 +50,53 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 3,
-        "email": "hetame1@gmail.com",
-        "username": "hetame1",
-        "name": "지훈",
-        "avatar": "https://github.com/hetame1.png",
-        "bio": "안냐세여, 지훈이에여",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "cheiru94gmail.com",
+      "username": "ichiban",
+      "name": "재일",
+      "avatar": "https://github.com/cheiru94.png",
+      "bio": "칠전팔기, 이재일!",
+      "password": "1234"
+    },
+    {
+      "id": 2,
+      "email": "l.juhyeonni@gmail.com",
+      "username": "juhyeonni",
+      "name": "주현",
+      "avatar": "https://github.com/juhyeonni.png",
+      "bio": "안녕하세요. 주현입니다.",
+      "password": "1234"
+    },
+    {
+      "id": 3,
+      "email": "hetame1@gmail.com",
+      "username": "hetame1",
+      "name": "지훈",
+      "avatar": "https://github.com/hetame1.png",
+      "bio": "안냐세여, 지훈이에여",
+      "password": "1234"
+    }
+  ],
+  "hearts": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "post_id": 1
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "post_id": 2
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "post_id": 1
     }
   ],
   "comments": [
@@ -116,35 +135,6 @@
     {
       "id": 3,
       "name": "카페"
-    }
-  ],
-  "users": [
-    {
-      "id": 1,
-      "email": "cheiru94gmail.com",
-      "username": "ichiban",
-      "name": "재일",
-      "avatar": "https://github.com/cheiru94.png",
-      "bio": "칠전팔기, 이재일!",
-      "password": "1234"
-    },
-    {
-      "id": 2,
-      "email": "l.juhyeonni@gmail.com",
-      "username": "juhyeonni",
-      "name": "주현",
-      "avatar": "https://github.com/juhyeonni.png",
-      "bio": "안녕하세요. 주현입니다.",
-      "password": "1234"
-    },
-    {
-      "id": 3,
-      "email": "hetame1@gmail.com",
-      "username": "hetame1",
-      "name": "지훈",
-      "avatar": "https://github.com/hetame1.png",
-      "bio": "안냐세여, 지훈이에여",
-      "password": "1234"
     }
   ],
   "story": [
