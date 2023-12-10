@@ -8,15 +8,22 @@ import getImages from '@services/imageSearch.service';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
 import ImageModal from './ImageModal';
+import { tagExtractor } from '@utils/\btagger';
+import { createPost } from '@services/posts.service';
+import { HrLine, VrLine } from '@components/common/Line';
+import React from 'react';
+import { useLogonUser } from '@contexts/LogonUser';
 
 interface CreatePostExtendProps {
   open?: boolean;
   observe?: Ref<HTMLDivElement>;
+  closeHandler: () => void;
 }
 
 enum PostFlow {
   Photo,
   Form,
+  Posting,
 }
 
 const useText = (initValue?: string) => {
@@ -33,12 +40,13 @@ const useText = (initValue?: string) => {
   return [text, handler] as const;
 };
 
-const useFlow = () => {
-  const [flow, setFlow] = useState<PostFlow>(PostFlow.Photo);
+const useFlow = (initFlow?: number) => {
+  const [flow, setFlow] = useState<PostFlow>(initFlow || PostFlow.Photo);
 
   const handler = {
     next: () => setFlow((p) => p + 1),
     prev: () => setFlow((p) => p - 1),
+    init: () => setFlow(initFlow || PostFlow.Photo),
   };
 
   return [flow, handler] as const;
@@ -67,16 +75,15 @@ export const usePhotos = () => {
 };
 
 const CreatePostExtend = (props: CreatePostExtendProps) => {
-  const [text, textHandler] = useText();
+  const [content, contentHandler] = useText();
   const [flow, flowHandler] = useFlow();
   const [photos, photoHandler] = usePhotos();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [image, setImage] = useState<ImageListType[]>([]);
   const [input, setInput] = useState<string>('');
+  const logonUser = useLogonUser();
 
   useEffect(() => {
-    console.log('TEST; photos: ', photos);
-
     if (photos.length === 0 && flow === PostFlow.Form) flowHandler.prev();
   }, [photos]);
 
@@ -86,9 +93,34 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   };
 
   const handler = {
+    photo: (e: React.ChangeEvent<HTMLInputElement>) => {
+      photoHandler.add(e);
+      flowHandler.next();
+    },
+
     post: () => {
-      console.log('posted');
+      if (!logonUser) return;
+
+      const payload = {
+        content,
+        photos,
+        tags: tagExtractor(content),
+        userId: logonUser.id,
+        placeId: 1,
+      };
+
+      createPost(payload).finally(() => {
+        handler.close();
+      });
+
+      flowHandler.next();
+    },
+
+    close: () => {
+      props.closeHandler();
+      contentHandler.clear();
       photoHandler.clear();
+      flowHandler.init();
     },
   };
 
@@ -206,14 +238,6 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
                     accept="image/*"
                     onChange={photoHandler.add}
                   />
-                  {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
-                  {/* <button
-                    onClick={() =>
-                      photoHandler.addUrl('http://github.com/juhyeonni.png')
-                    }
-                  >
-                    sdfasdf
-                  </button> */}
                 </AddPhoto>
               </ImageContainer>
               <VrLine />
@@ -221,12 +245,12 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
               <UserInputForm>
                 <Author>
                   <div className="avatar">
-                    <img src="https://github.com/juhyeonni.png" alt="" />
+                    <img src={logonUser?.avatar} alt="avatar" />
                   </div>
-                  <span>asdf</span>
+                  <span>{logonUser?.username}</span>
                 </Author>
                 <div className="content">
-                  <InputArea text={text} textHandler={textHandler} />
+                  <InputArea text={content} textHandler={contentHandler} />
                 </div>
                 <HrLine />
                 <div className="placeinput" />
@@ -264,7 +288,6 @@ const Container = styled(motion.div)`
   flex-direction: column;
   margin: auto;
 
-  border: 1px solid black;
   border-radius: 12px;
 
   @media screen and (max-height: 500px) {
@@ -283,17 +306,6 @@ const Header = styled.div`
 
 const Content = styled.div`
   display: flex;
-`;
-
-const HrLine = styled.hr<{ $strong?: boolean }>`
-  border: 0;
-  border-top: ${({ theme }) => theme.lightTheme.borderColor};
-  margin: 0;
-`;
-
-const VrLine = styled.div`
-  border-left: ${({ theme }) => theme.lightTheme.borderColor};
-  margin: 0;
 `;
 
 const BackgroundLayer = styled.div<{ $open?: boolean }>`
@@ -366,5 +378,5 @@ const ImageSearch = styled.input`
   height: 2rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid ${({ theme }) => theme.lightTheme.borderColor};
+  border: ${({ theme }) => theme.lightTheme.borderColor};
 `;
