@@ -9,6 +9,8 @@ import LogoIcon from '@assets/icons/logo';
 import SearchIcon from '@assets/icons/search';
 import useModal from '@hooks/useModal';
 import useToggle from '@hooks/useToggle';
+import { useNavigate } from 'react-router-dom';
+import { useLogonUser } from '@contexts/LogonUser';
 
 interface NavItem {
   id: string;
@@ -22,6 +24,8 @@ const Sidebar = () => {
   const searchModal = useModal();
   const createPostModal = useModal();
   const othersToggler = useToggle();
+  const navigate = useNavigate();
+  const logonUser = useLogonUser();
 
   const handleClick = (item: NavItem) => {
     setSelected(item.id);
@@ -34,7 +38,7 @@ const Sidebar = () => {
       Icon: HomeIcon,
       label: '홈',
       callback: () => {
-        window.location.reload();
+        navigate('/redirect?dest=/', { replace: true });
       },
     },
     {
@@ -50,16 +54,17 @@ const Sidebar = () => {
       Icon: BoxIcon,
       label: '새 게시물',
       callback: () => {
+        if (!logonUser) navigate('/login');
         createPostModal.toggler.open();
       },
     },
   ];
 
   return (
-    <Container>
-      <div className="title">
+    <Container $open={searchModal.toggler.isOpen}>
+      <button className="title" onClick={() => navigate('/redirect?dest=/')}>
         <LogoIcon width={147} height={40} />
-      </div>
+      </button>
       <nav>
         {NAV_ITEMS.map((item) => (
           <Interact
@@ -67,13 +72,32 @@ const Sidebar = () => {
             data-id={item.id}
             onClick={() => handleClick(item)}
             $selected={selected === item.id}
+            $open={searchModal.toggler.isOpen}
           >
             <item.Icon />
             <span>{item.label}</span>
           </Interact>
         ))}
         {/* TODO: Others 좀 더 가독성 높도록 수정해야 함 */}
-        <Others>
+        <div style={{ height: '100%' }} />
+        {logonUser && (
+          <Interact
+            data-id="UserProfile"
+            onClick={() => navigate(`/u/${logonUser.username}`)}
+            $open={searchModal.toggler.isOpen}
+          >
+            <div style={{ width: 32, height: 32, borderRadius: '50%' }}>
+              {logonUser.avatar && (
+                <img
+                  style={{ width: 32, height: 32, borderRadius: '50%' }}
+                  src={logonUser.avatar}
+                />
+              )}
+            </div>
+            <span>{logonUser.username}</span>
+          </Interact>
+        )}
+        <Others $open={searchModal.toggler.isOpen}>
           <div className="others" onClick={othersToggler.toggle}>
             <EtcIcon />
             <span>더 보기</span>
@@ -86,11 +110,27 @@ const Sidebar = () => {
                 zIndex: 1,
                 width: '266px',
                 padding: '8px',
-                border: '1px solid black',
+                border: '1px solid rgba(0, 0, 0, 0.1)',
                 borderRadius: '8px',
+                backgroundColor: 'white',
               }}
             >
-              <span>asdfsd</span>
+              {logonUser && (
+                <button
+                  className="others-interact"
+                  onClick={() => navigate('/logout', { replace: true })}
+                >
+                  logout
+                </button>
+              )}
+              {!logonUser && (
+                <button
+                  className="others-interact"
+                  onClick={() => navigate('/login')}
+                >
+                  login
+                </button>
+              )}
             </div>
           )}
         </Others>
@@ -101,6 +141,7 @@ const Sidebar = () => {
       />
       <CreatePostExtend
         open={createPostModal.toggler.isOpen}
+        closeHandler={createPostModal.toggler.close}
         observe={createPostModal.ref}
       />
     </Container>
@@ -113,24 +154,32 @@ const Container = styled.div<{ $open?: boolean }>`
   display: flex;
   position: fixed;
   flex-direction: column;
-  height: 100%;
-  width: var(--nav-medium-width);
-  z-index: 1;
+  height: -webkit-fill-available;
+  width: ${({ $open }) =>
+    $open ? 'var(--nav-narrow-width)' : 'var(--nav-medium-width)'};
+  z-index: 3;
   transition: width 0.3s ease-in-out;
 
-  border: 1px solid black;
+  border: ${({ theme }) => theme.lightTheme.borderColor};
 
   background-color: ${({ theme }) => theme.lightTheme.bgColor};
+
+  font-family: var(--font-family-system);
+
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.5);
   }
 
-  & > div.title {
+  & > button.title {
     display: flex;
     align-items: center;
     height: 4rem;
     margin-bottom: 1rem;
     padding: 25px 12px 16px 12px;
+
+    &:active {
+      -webkit-tap-highlight-color: transparent;
+    }
   }
 
   & > nav {
@@ -146,9 +195,10 @@ const Container = styled.div<{ $open?: boolean }>`
   }
 `;
 
-const Interact = styled.div<{
+const Interact = styled.button<{
   'data-id': string;
   $selected?: boolean;
+  $open?: boolean;
 }>`
   padding: 12px;
   margin: 4px 0 4px;
@@ -157,9 +207,15 @@ const Interact = styled.div<{
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  border-radius: 8px;
 
-  /* FIXME: */
-  border: 1px solid orange;
+  &:active {
+    scale: 0.99;
+  }
+
+  & > span {
+    display: ${({ $open }) => ($open ? 'none' : 'inline')};
+  }
 
   @media ${({ theme }) => theme.windowSize.lg} {
     & > span {
@@ -167,8 +223,10 @@ const Interact = styled.div<{
     }
   }
 
+  transition: backdrop-filter 0.2s ease-in-out;
+
   &:hover {
-    backdrop-filter: brightness(0.9);
+    backdrop-filter: brightness(0.93);
 
     & svg {
       stroke: black;
@@ -186,7 +244,7 @@ const Interact = styled.div<{
     `}
 `;
 
-const Others = styled.div`
+const Others = styled.button<{ $open?: boolean }>`
   display: flex;
   align-items: center;
   margin-top: auto;
@@ -201,11 +259,52 @@ const Others = styled.div`
     padding: 12px;
     height: 1.5rem;
     cursor: pointer;
-    border: 1px solid orange;
+
+    background-color: ${({ theme }) => theme.lightTheme.bgColor};
+
+    & > span {
+      display: ${({ $open }) => ($open ? 'none' : 'inline')};
+    }
 
     @media ${({ theme }) => theme.windowSize.lg} {
       & > span {
         display: none;
+      }
+    }
+  }
+
+  .others-interact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px;
+    height: 1.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    width: -webkit-fill-available;
+
+    &:active {
+      scale: 0.99;
+    }
+
+    & > span {
+      display: ${({ $open }) => ($open ? 'none' : 'inline')};
+    }
+
+    @media ${({ theme }) => theme.windowSize.lg} {
+      & > span {
+        display: none;
+      }
+    }
+
+    transition: backdrop-filter 0.2s ease-in-out;
+
+    &:hover {
+      backdrop-filter: brightness(0.93);
+
+      & svg {
+        stroke: black;
+        stroke-width: 1;
       }
     }
   }

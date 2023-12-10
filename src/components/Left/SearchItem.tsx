@@ -77,7 +77,7 @@ const Container = styled.div`
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
-    border: 1px solid black;
+    border: ${({ theme }) => theme.lightTheme.borderColor};
     flex-shrink: 0;
     margin: 5px 7px 5px 5px;
 

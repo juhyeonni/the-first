@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import useToggle from '@hooks/useToggle';
+import EmojiIcon from '@assets/icons/emoji';
 
 interface InputAreaProps {
   textHandler: {
@@ -36,7 +37,9 @@ const EmojiInputDropdown = (props: EmojiInputProps) => {
 
   return (
     <EmojiInputContainer>
-      <button onClick={toggler.toggle}>emoji</button>
+      <button onClick={toggler.toggle}>
+        <EmojiIcon />
+      </button>
       {toggler.isOpen && (
         <EmojiContainer>
           <BalloonContainer>
@@ -54,6 +57,7 @@ const EmojiInputDropdown = (props: EmojiInputProps) => {
 
 const EmojiInputContainer = styled.div`
   position: relative;
+  padding: 8px;
 `;
 
 const EmojiContainer = styled.div`
@@ -91,6 +95,8 @@ const Textarea = styled.textarea`
   color: black;
   border: none;
   outline: none;
+  width: 225px;
+  font-family: var(--font-family-system);
 `;
 
 const Emoji = styled.button`

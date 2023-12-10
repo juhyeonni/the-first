@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { PostAndUser, Post } from '@interfaces/post.interface';
+import { PostWithUser, Post } from '@interfaces/post.interface';
 import Story from './Story';
 import MainCard from './MainCard';
 // eslint-disable-next-line import/order
 import { getPosts, getPostsUsers } from '@services/posts.service';
 
 const Main = () => {
-  const [mainPosts, setMainPosts] = useState<PostAndUser[]>([]);
+  const [mainPosts, setMainPosts] = useState<PostWithUser[]>([]);
   const [onlyPosts, setOnlyPosts] = useState<Post[]>([]);
 
   /* post + user 데이터 가져오기  */
