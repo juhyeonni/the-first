@@ -3,6 +3,9 @@ import HomePage from '@pages/home';
 import StoryPage from '@pages/story';
 import LoginPage from '@pages/login';
 import RegisterPage from '@pages/register';
+import NotFoundPage from '@pages/notfound';
+import LogoutPage from '@pages/logout';
+import RedirectPage from '@pages/redirect';
 
 function Router() {
   return (
@@ -11,6 +14,9 @@ function Router() {
       <Route path="/story/:id" element={<StoryPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
+      <Route path="/redirect" element={<RedirectPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
