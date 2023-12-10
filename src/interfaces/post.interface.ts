@@ -30,3 +30,9 @@ export interface User {
 export interface PostAndUser extends Post {
   user: User; //  <- User 추가 🟡
 }
+
+export interface HeartsInfo {
+  id: number;
+  user_id: number;
+  post_id: number;
+}
