@@ -73,7 +73,6 @@ const StyledSlider = styled(Slider)`
 
   & .slick-prev {
     left: 8px;
-    z-index: 1;
 
     &::before {
       color: gray;
@@ -82,10 +81,23 @@ const StyledSlider = styled(Slider)`
 
   & .slick-next {
     right: 8px;
-    z-index: 1;
 
     &::before {
       color: gray;
+    }
+  }
+
+  & .slick-prev,
+  .slick-next {
+    z-index: 1;
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover {
+    .slick-prev,
+    .slick-next {
+      opacity: 1;
     }
   }
 `;
@@ -100,7 +112,7 @@ const Image = styled.img`
   width: 360px;
   height: 360px;
 
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
 `;
 

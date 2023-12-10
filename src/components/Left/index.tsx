@@ -16,7 +16,4 @@ const Container = styled.div`
   min-width: var(--nav-narrow-width);
   display: flex;
   flex-direction: column;
-
-  /* FIXME: */
-  border: 1px solid red;
 `;

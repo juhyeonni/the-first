@@ -486,23 +486,33 @@ const StyledSlider = styled(Slider)`
     position: initial;
   }
 
-  /* < 좌측 화살표  */
   & .slick-prev {
     left: 8px;
-    z-index: 1;
 
     &::before {
-      color: #ffffff;
+      color: gray;
     }
   }
 
-  /* > 우측 화살표  */
   & .slick-next {
     right: 8px;
-    z-index: 1;
 
     &::before {
-      color: #ffffff;
+      color: gray;
+    }
+  }
+
+  & .slick-prev,
+  .slick-next {
+    z-index: 1;
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover {
+    .slick-prev,
+    .slick-next {
+      opacity: 1;
     }
   }
 `; /* 🟡 캐러셀 스타일링 終🟡 */
