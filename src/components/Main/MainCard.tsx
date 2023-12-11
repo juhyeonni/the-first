@@ -1,5 +1,5 @@
 /* --------------------------------------import-------------------------------------- */
-import React, { useState, Component, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
 /* 📎 service.ts (axios) */
@@ -25,12 +25,12 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
 /* 📎 인터페이스 : MainCardProps */
-import { Post, PostAndUser, HeartsInfo } from '@interfaces/post.interface';
+import { Post, PostWithUser } from '@interfaces/post.interface';
 
 /* --------------------------------------import-------------------------------------- */
 
 interface MainCardProps {
-  post: PostAndUser;
+  post: PostWithUser;
   onlyPost: Post;
   // :HearInfo;
 }
@@ -87,7 +87,9 @@ const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
   //  -----------------------------------------useEffect----------------------------------
 
   // FIXME: 코맨트 추가
-  const handleCommentChange = (e) => {
+  const handleCommentChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setPostComment(e.target.value);
     // console.log(postComment);
   };
@@ -133,12 +135,12 @@ const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StyledSlider {...settings}>
           {/* 🟡 map 메서드로 , 게시 사진 수 만큼 생성 🟡 */}
-          {post.imgs.map((img) => (
+          {post.imgs.map((imgs: string) => (
             <div key={post.id} className="mainImg_box">
               <img
                 className="element-userImg"
                 alt="Element userImg"
-                src={img}
+                src={imgs}
               />
             </div>
           ))}
@@ -504,23 +506,33 @@ const StyledSlider = styled(Slider)`
     position: initial;
   }
 
-  /* < 좌측 화살표  */
   & .slick-prev {
     left: 8px;
-    z-index: 1;
 
     &::before {
-      color: #ffffff;
+      color: gray;
     }
   }
 
-  /* > 우측 화살표  */
   & .slick-next {
     right: 8px;
-    z-index: 1;
 
     &::before {
-      color: #ffffff;
+      color: gray;
+    }
+  }
+
+  & .slick-prev,
+  .slick-next {
+    z-index: 1;
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover {
+    .slick-prev,
+    .slick-next {
+      opacity: 1;
     }
   }
 `; /* 🟡 캐러셀 스타일링 終🟡 */

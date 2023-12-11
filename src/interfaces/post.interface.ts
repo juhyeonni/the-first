@@ -1,6 +1,9 @@
+// eslint-disable-next-line import/no-cycle
+import { User } from './user.interface';
+
 export interface Post {
   id: number;
-  imgs: string[];
+  photos: string[];
   heart: boolean;
   content: string;
   userId: number;
@@ -10,24 +13,16 @@ export interface Post {
 }
 
 export interface PostPayload {
-  title: string;
   content: string;
+  photos: File[];
+  userId: number;
+  placeId: number;
   tags?: string[];
 }
 
-// 🟡 유저
-export interface User {
-  id: number;
-  email: string;
-  username: string;
-  name: string;
-  avatar: string;
-  bio: string;
-  password: string;
-}
-
 // 🟡 포스트 + 유저
-export interface PostAndUser extends Post {
+export interface PostWithUser extends Post {
+  imgs: string;
   user: User; //  <- User 추가 🟡
 }
 

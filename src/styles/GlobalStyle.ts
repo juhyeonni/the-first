@@ -85,6 +85,7 @@ const reset = css`
   time,
   mark,
   audio,
+  input,
   video {
     margin: 0;
     padding: 0;
@@ -147,6 +148,14 @@ const reset = css`
   a:active {
     text-decoration: none;
   }
+  textarea {
+    resize: none;
+    outline: none;
+    border: none;
+  }
+  * {
+    font-family: var(--font-family-system);
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -154,6 +163,33 @@ const GlobalStyle = createGlobalStyle`
   :root {
     --nav-narrow-width: 72px; 
     --nav-medium-width: 256px;
+    --font-family-system: --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  @keyframes loading {
+    0% {
+      transform: translateX(-150%);
+    }
+    50% {
+      transform: translateX(-60%);
+    }
+    100% {
+      transform: translate(150%);
+    }
+  }
+
+  @keyframes warningShake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(3px);
+    }
+
+    20%, 40%, 60%, 80% {
+      transform: translateX(-3px);
+    }
   }
 
   color: ${({ theme }) => theme.lightTheme.textColor};
