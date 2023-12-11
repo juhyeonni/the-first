@@ -38,7 +38,7 @@ const Main = () => {
       <div style={{ margin: '0 auto' }}>
         {/* {[...mainPosts].reverse().map((post, index) => ( */}
         {mainPosts.map((post, index) => (
-          <MainCard key={post.id} post={post} onlyPosts={onlyPosts[index]} />
+          <MainCard key={post.id} post={post} onlyPost={onlyPosts[index]} />
         ))}
       </div>
     </Container>

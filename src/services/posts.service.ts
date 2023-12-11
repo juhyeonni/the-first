@@ -73,3 +73,9 @@ export async function getPostsByUserId(userId: number) {
   );
   return res.data;
 }
+
+// 🟡 하트 정보 get 🟡
+export async function getHeartsInfo() {
+  const res = await baseAxios.get('/hearts');
+  return res.data;
+}
