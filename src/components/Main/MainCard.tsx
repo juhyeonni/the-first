@@ -1,7 +1,9 @@
 /* --------------------------------------import-------------------------------------- */
 import React, { useState, Component, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { patchHeart } from '@services/posts.service';
+
+/* 📎 service.ts (axios) */
+import { patchHeart, getHeartsInfo } from '@services/posts.service';
 
 /* 📎폰트 어썸 */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -23,16 +25,18 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
 /* 📎 인터페이스 : MainCardProps */
-import { PostAndUser } from '@interfaces/post.interface';
+import { Post, PostAndUser, HeartsInfo } from '@interfaces/post.interface';
 
 /* --------------------------------------import-------------------------------------- */
 
 interface MainCardProps {
   post: PostAndUser;
+  onlyPost: Post;
+  // :HearInfo;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
-const MainCard = ({ post }: MainCardProps): JSX.Element => {
+const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
   /*  📝 사용자 게시글 입력 */
   const textContent = post.content;
   const maxLength = 30; // 원하는 글자 수
@@ -42,6 +46,8 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
 
   /* 📂 2. 하트 flug  */
   const [isHeartShown, setIsHeartShown] = useState(post.heart);
+
+  const [heartInfo, setHeartInfo] = useState();
 
   /* 📂 3. 바운스 flug */
   const [bounce, setBounce] = useState(false);
@@ -56,15 +62,29 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
 
   // 2.2 json 서버 제공
   const changeHeart = async () => {
-    const res = await patchHeart({ ...post, heart: isHeartShown });
+    const res = await patchHeart({ ...onlyPost, heart: isHeartShown });
     // console.log('patchHeart의 결과: ', res);
     return res;
   };
 
-  // 2.3 json 서버 하트 변경
+  //  -----------------------------------------useEffect----------------------------------
+
+  /* 하트 */
+  useEffect(() => {
+    const getHeartsInfoFun = async () => {
+      const result = await getHeartsInfo();
+      setHeartInfo(result);
+      console.log(heartInfo);
+    };
+    getHeartsInfoFun();
+  }, []);
+
+  /* json 서버 하트 변경 */
   useEffect(() => {
     changeHeart();
   }, [isHeartShown]);
+
+  //  -----------------------------------------useEffect----------------------------------
 
   // FIXME: 코맨트 추가
   const handleCommentChange = (e) => {
@@ -255,8 +275,6 @@ const StyledMainCard = styled.div`
 
   /* 🟢 1.1 Top. 좌측 상단 이미지 틀 */
   & .element-image {
-    border: 1.14px solid;
-    border-color: #000000;
     height: 80px;
     width: 80px;
     position: relative;
@@ -284,7 +302,7 @@ const StyledMainCard = styled.div`
   & .userId {
     font-size: 25px;
     font-weight: 600;
-    margin-right: 20px;
+    margin-right: 30px;
   }
 
   /* 1.3 Top. 우측 상단 ・・・ 아이콘 */
