@@ -4,7 +4,7 @@ import { baseAxios } from '@axios';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { StoryType } from '@/types/StoryType';
+import { StoryType } from '@interfaces/story.interface';
 
 const slideVariants = {
   hidden: (direction: string) => ({

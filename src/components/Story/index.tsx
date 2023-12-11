@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Mousewheel, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { StoryContentType } from '@/types/StoryType';
+import { StoryContentType } from '@interfaces/story.interface';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';

@@ -1,4 +1,4 @@
-import { StoryType } from '@/types/StoryType';
+import { StoryType } from '@interfaces/story.interface';
 import { baseAxios } from '@axios';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
