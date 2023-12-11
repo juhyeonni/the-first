@@ -74,7 +74,8 @@ const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
     const getHeartsInfoFun = async () => {
       const result = await getHeartsInfo();
       setHeartInfo(result);
-      console.log(heartInfo);
+      console.log('heartInfo 실행됨 ⬇️⬇️');
+      console.log(result);
     };
     getHeartsInfoFun();
   }, []);
@@ -135,12 +136,13 @@ const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StyledSlider {...settings}>
           {/* 🟡 map 메서드로 , 게시 사진 수 만큼 생성 🟡 */}
-          {post.imgs.map((imgs: string) => (
+          {/* FIXME: imgs -> photos */}
+          {post.photos.map((photo) => (
             <div key={post.id} className="mainImg_box">
               <img
                 className="element-userImg"
                 alt="Element userImg"
-                src={imgs}
+                src={photo}
               />
             </div>
           ))}

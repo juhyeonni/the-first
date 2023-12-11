@@ -3,12 +3,12 @@
     {
       "id": 1,
       "content": "ブルーノートとジャーズ、大好き！,ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。",
-      "imgs": [
+      "photos": [
         "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Blue_Note_%28Tokyo%29.jpg/375px-Blue_Note_%28Tokyo%29.jpg",
         "https://www.bluenote.co.jp/jp/artists/assets_c/2023/09/20231205fl-thumb-668x376-45885.jpg",
         "https://postfiles.pstatic.net/MjAyMzA0MzBfNjMg/MDAxNjgyODYyMDIxODgx.1Rz05H3nJEX82kyCyC3f-2nppm4PxAhqECeV6UP6c2Eg.oyZwWxh_eQgBap-gq6Nm_Fh-FZk1pUmdxdHJm-uLPxkg.JPEG.23-century/362BD365-3C1D-45AC-993E-95E12FD1AB7E_1_105_c.jpeg?type=w773"
       ],
-      "heart": false,
+      "heart": true,
       "userId": 1,
       "placeId": 1,
       "tags": [
@@ -30,7 +30,7 @@
     {
       "id": 2,
       "content": "밤하늘이 너무나도 멋짐돠!",
-      "imgs": [
+      "photos": [
         "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
         "https://cdn.pixabay.com/photo/2015/02/24/15/41/wolf-647528_1280.jpg"
       ],
@@ -56,11 +56,11 @@
     {
       "id": 3,
       "content": "모히또 가서 몰디브 한잔하고 왔어요",
-      "imgs": [
+      "photos": [
         "https://cdn.pixabay.com/photo/2018/06/13/18/20/waves-3473335_1280.jpg",
         "https://cdn.pixabay.com/photo/2016/03/04/19/36/beach-1236581_1280.jpg"
       ],
-      "heart": true,
+      "heart": false,
       "userId": 3,
       "placeId": 1,
       "tags": [
@@ -107,6 +107,14 @@
       "avatar": "https://github.com/hetame1.png",
       "bio": "안냐세여, 지훈이에여",
       "password": "1234"
+    },
+    {
+      "email": "cheiru94@gmail.com",
+      "password": "$2a$10$CDZer.sMMkWj/.t5bnBUEedm8Pv5ShcHVmQe9Q3.1RqYkHYQ6AHbq",
+      "username": "cheiru94",
+      "id": 4,
+      "name": "재일",
+      "bio": "안녕하세요 재일입니다."
     }
   ],
   "hearts": [

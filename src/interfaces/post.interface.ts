@@ -22,7 +22,6 @@ export interface PostPayload {
 
 // 🟡 포스트 + 유저
 export interface PostWithUser extends Post {
-  imgs: string;
   user: User; //  <- User 추가 🟡
 }
 
