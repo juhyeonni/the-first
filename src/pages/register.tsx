@@ -3,8 +3,13 @@ import Input from '@components/Input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { registerUser } from '@services/auth.service';
+import { useState } from 'react';
+import { setAuth } from '@utils/auth';
 
 const RegisterPage = () => {
+  const [errorMsg, setErrorMsg] = useState<string>('');
+
   const {
     register,
     handleSubmit,
@@ -12,13 +17,27 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
+      email: '',
       username: '',
       password: '',
       confirmPassword: '',
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {};
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    registerUser({
+      email: data['email'],
+      username: data['username'],
+      password: data['password'],
+    })
+      .then((auth) => {
+        setAuth(auth);
+        window.location.href = '/';
+      })
+      .catch((e) => {
+        setErrorMsg(e.message);
+      });
+  };
 
   return (
     <Main>
@@ -27,8 +46,19 @@ const RegisterPage = () => {
           <Header>TheFirst</Header>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Input
+              id="email"
+              type="email"
+              label="이메일"
+              placeholder="이메일"
+              register={register}
+              required
+              errors={errors}
+            />
+
+            <Input
               id="username"
               type="text"
+              label="사용자 이름"
               placeholder="사용자 이름"
               register={register}
               required
@@ -39,6 +69,7 @@ const RegisterPage = () => {
             <Input
               id="password"
               type="password"
+              label="비밀번호"
               placeholder="비밀번호"
               register={register}
               required
@@ -49,12 +80,23 @@ const RegisterPage = () => {
             <Input
               id="confirmPassword"
               type="password"
+              label="비밀번호 확인"
               placeholder="비밀번호 확인"
               register={register}
               required
               errors={errors}
               passwordCheck={watch('password')}
             />
+
+            <div
+              style={{
+                height: '1rem',
+                padding: '0.5rem',
+                color: 'red',
+              }}
+            >
+              {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
+            </div>
 
             <Button label="가입" />
           </Form>
@@ -127,4 +169,10 @@ const BottomText = styled.div`
     color: #0095f6;
     font-weight: 600;
   }
+`;
+
+const ErrorMsg = styled.span`
+  color: red;
+
+  animation: warningShake 0.82s ease-in-out;
 `;

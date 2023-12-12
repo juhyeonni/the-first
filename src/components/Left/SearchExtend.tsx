@@ -1,6 +1,5 @@
-import { Ref, useState } from 'react';
+import { Ref, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import SearchItem from './SearchItem';
@@ -37,7 +36,7 @@ const useNav = () => {
   const handler = {
     user: (user: User) => {
       addHistory({ type: 'user', data: user });
-      navigate(`/${user.username}`);
+      navigate(`/u/${user.username}`);
     },
     tag: (tag: Tag) => {
       addHistory({ type: 'tag', data: tag });
@@ -60,34 +59,22 @@ const SearchExtend = (props: SearchExtendProps) => {
   });
   const [keyword, keywordHandler] = useKeyword();
   const { history, navHandler, clearHistory } = useNav();
-  const isNarrow = useMediaQuery({ query: '(max-width: 1024px)' });
-  const containerVariants = {
-    open: {
-      left: isNarrow ? 'var(--nav-narrow-width)' : 'var(--nav-medium-width)',
-      transition: {
-        type: 'spring',
-        stiffness: 280,
-        damping: 25,
-      },
-    },
-    closed: {
-      transition: {
-        type: 'spring',
-        stiffness: 260,
-        damping: 20,
-      },
-    },
-  };
+  const [searching, setSearching] = useState<boolean>(false);
 
   const handler = {
     search: async () => {
+      setSearching(true);
       const data = await searchAll(keyword);
       setSearchData(data);
     },
     clear: () => clearHistory(),
   };
 
-  useAutoCallback([keyword], handler.search, 300);
+  useEffect(() => {
+    setSearching(false);
+  }, [searchData]);
+
+  useAutoCallback([keyword], handler.search, 200);
 
   return (
     <>
@@ -118,6 +105,15 @@ const SearchExtend = (props: SearchExtendProps) => {
             </div>
 
             <div className="search-items">
+              {searching ? (
+                <span>검색 중... 🤔</span>
+              ) : (
+                searchData.users.length === 0 &&
+                searchData.tags.length === 0 &&
+                searchData.places.length === 0 && (
+                  <span>검색 결과가 없습니다.</span>
+                )
+              )}
               {searchData.users.map((item: User) => (
                 <SearchItem
                   key={item.id}
@@ -179,18 +175,42 @@ const SearchExtend = (props: SearchExtendProps) => {
 
 export default SearchExtend;
 
+const containerVariants = {
+  open: {
+    left: 'var(--nav-narrow-width)',
+    transition: {
+      type: 'spring',
+      stiffness: 280,
+      damping: 25,
+    },
+  },
+  closed: {
+    transition: {
+      type: 'spring',
+      stiffness: 260,
+      damping: 20,
+    },
+  },
+};
 const Container = styled(motion.div)`
   width: 397px;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: -webkit-fill-available;
   position: absolute;
   top: 0;
-  right: 100%;
+  right: 120%;
   z-index: -1;
+  padding: 8px 16px;
 
-  /* FIXME: */
-  border: 1px solid red;
+  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1);
+
+  background-color: ${({ theme }) => theme.lightTheme.bgColor};
+
+  border-right: ${({ theme }) => theme.lightTheme.borderColor};
+  border-left: ${({ theme }) => theme.lightTheme.borderColor};
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
 
   & > h3 {
     font-size: ${({ theme }) => theme.fontSize.lg};
@@ -202,18 +222,25 @@ const Container = styled(motion.div)`
 const Searchbar = styled.div`
   margin-bottom: 36px;
   position: relative;
-  padding: 0 16px 24px 16px;
 
   & > input {
-    width: 100%;
     font-size: ${({ theme }) => theme.fontSize.md};
+    width: -webkit-fill-available;
+    padding: 8px 16px;
+    font-weight: 100;
+    background-color: rgb(239, 239, 239);
+    border: none;
+    border-radius: 8px;
   }
 
   & > button.clear {
     position: absolute;
-    top: 0;
-    right: 0;
-    padding: 3px 16px 16px 3px;
+    display: flex;
+    top: 0px;
+    right: 6px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -230,7 +257,7 @@ const HistoryList = styled.div`
 
     & > button.clear {
       font-size: ${({ theme }) => theme.fontSize.sm};
-      color: blue;
+      color: rgb(0, 149, 246);
     }
   }
 

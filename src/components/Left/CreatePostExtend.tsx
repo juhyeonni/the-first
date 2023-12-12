@@ -8,15 +8,23 @@ import getImages from '@services/imageSearch.service';
 import ImageSlider from './ImageSlider';
 import InputArea from './InputArea';
 import ImageModal from './ImageModal';
+import { tagExtractor } from '@utils/\btagger';
+import { createPost } from '@services/posts.service';
+import { HrLine, VrLine } from '@components/common/Line';
+import React from 'react';
+import { useLogonUser } from '@contexts/LogonUser';
+import UserAvatar from '@components/common/UserAvatar';
 
 interface CreatePostExtendProps {
   open?: boolean;
   observe?: Ref<HTMLDivElement>;
+  closeHandler: () => void;
 }
 
 enum PostFlow {
   Photo,
   Form,
+  Posting,
 }
 
 const useText = (initValue?: string) => {
@@ -33,12 +41,13 @@ const useText = (initValue?: string) => {
   return [text, handler] as const;
 };
 
-const useFlow = () => {
-  const [flow, setFlow] = useState<PostFlow>(PostFlow.Photo);
+const useFlow = (initFlow?: number) => {
+  const [flow, setFlow] = useState<PostFlow>(initFlow || PostFlow.Photo);
 
   const handler = {
     next: () => setFlow((p) => p + 1),
     prev: () => setFlow((p) => p - 1),
+    init: () => setFlow(initFlow || PostFlow.Photo),
   };
 
   return [flow, handler] as const;
@@ -67,16 +76,15 @@ export const usePhotos = () => {
 };
 
 const CreatePostExtend = (props: CreatePostExtendProps) => {
-  const [text, textHandler] = useText();
+  const [content, contentHandler] = useText();
   const [flow, flowHandler] = useFlow();
   const [photos, photoHandler] = usePhotos();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [image, setImage] = useState<ImageListType[]>([]);
   const [input, setInput] = useState<string>('');
+  const logonUser = useLogonUser();
 
   useEffect(() => {
-    console.log('TEST; photos: ', photos);
-
     if (photos.length === 0 && flow === PostFlow.Form) flowHandler.prev();
   }, [photos]);
 
@@ -86,9 +94,34 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   };
 
   const handler = {
+    photo: (e: React.ChangeEvent<HTMLInputElement>) => {
+      photoHandler.add(e);
+      flowHandler.next();
+    },
+
     post: () => {
-      console.log('posted');
+      if (!logonUser) return;
+
+      const payload = {
+        content,
+        photos,
+        tags: tagExtractor(content),
+        userId: logonUser.id,
+        placeId: 1,
+      };
+
+      createPost(payload).finally(() => {
+        handler.close();
+      });
+
+      flowHandler.next();
+    },
+
+    close: () => {
+      props.closeHandler();
+      contentHandler.clear();
       photoHandler.clear();
+      flowHandler.init();
     },
   };
 
@@ -102,140 +135,139 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   };
 
   return (
-    <BackgroundLayer ref={props.observe} $open={props.open}>
-      <Container
-        variants={containerVariants}
-        initial="closed"
-        animate={props.open ? 'open' : 'closed'}
-        layout="preserve-aspect"
-      >
-        <Header>
-          {flow === PostFlow.Photo && (
-            <>
-              <div />
-              <h3>새 게시물 만들기</h3>
-              <div />
-            </>
-          )}
-          {flow === PostFlow.Form && (
-            <>
-              <button onClick={flowHandler.prev}>{'<'}</button>
-              <h3>게시물 만들기</h3>
-              <button onClick={handler.post}>공유</button>
-            </>
-          )}
-        </Header>
+    logonUser && (
+      <BackgroundLayer ref={props.observe} $open={props.open}>
+        <Container
+          variants={containerVariants}
+          initial="closed"
+          animate={props.open ? 'open' : 'closed'}
+          layout="preserve-aspect"
+        >
+          <Header>
+            {flow === PostFlow.Photo && (
+              <>
+                <div />
+                <h3>새 게시물 만들기</h3>
+                <div />
+              </>
+            )}
+            {flow === PostFlow.Form && (
+              <>
+                <button onClick={flowHandler.prev}>{'<'}</button>
+                <h3>게시물 만들기</h3>
+                <button onClick={handler.post}>공유</button>
+              </>
+            )}
+          </Header>
 
-        <HrLine />
-        <Content>
-          {flow === PostFlow.Photo && (
-            <div
-              style={{
-                display: 'flex',
-                width: '360px',
-                height: '360px',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-            >
-              <label
-                htmlFor="photos"
+          <HrLine />
+          <Content>
+            {flow === PostFlow.Photo && (
+              <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
+                  width: '360px',
+                  height: '360px',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  rowGap: '1rem',
-                  cursor: 'pointer',
+                  position: 'relative',
                 }}
               >
-                <PlusIcon width={64} height={64} />
-                <span>컴퓨터에서 선택</span>
-                <input
-                  id="photos"
-                  type="file"
-                  multiple
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => {
-                    photoHandler.add(e);
-                    flowHandler.next();
+                <label
+                  htmlFor="photos"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    rowGap: '1rem',
+                    cursor: 'pointer',
                   }}
-                />
-                <ImageSearch
-                  type="text"
-                  placeholder="이미지 검색"
-                  value={input}
-                  onChange={onInput}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      onSearch();
-                    }
-                  }}
-                />
-                <ImageModal
-                  isOpen={modalIsOpen}
-                  onClose={setModalIsOpen}
-                  image={image}
-                  handler={photoHandler}
-                  flowHandler={flowHandler}
-                />
-              </label>
-            </div>
-          )}
-
-          {flow === PostFlow.Form && (
-            <div style={{ display: 'flex' }}>
-              <ImageContainer>
-                <ImageSlider
-                  images={photos}
-                  deleteHandler={(e) => {
-                    photoHandler.remove(e);
-                    if (photos.length === 0) flowHandler.prev();
-                  }}
-                />
-                <AddPhoto>
-                  <label htmlFor="photos">
-                    <PlusIcon />
-                  </label>
+                >
+                  <PlusIcon width={64} height={64} />
+                  <span>컴퓨터에서 선택</span>
                   <input
                     id="photos"
                     type="file"
                     multiple
                     hidden
                     accept="image/*"
-                    onChange={photoHandler.add}
+                    onChange={(e) => {
+                      photoHandler.add(e);
+                      flowHandler.next();
+                    }}
                   />
-                  {/* TEST: url로 file 추가하는 핸들러 테스트; 확인 시 삭제 */}
-                  {/* <button
-                    onClick={() =>
-                      photoHandler.addUrl('http://github.com/juhyeonni.png')
-                    }
-                  >
-                    sdfasdf
-                  </button> */}
-                </AddPhoto>
-              </ImageContainer>
-              <VrLine />
-              {/* user input form */}
-              <UserInputForm>
-                <Author>
-                  <div className="avatar">
-                    <img src="https://github.com/juhyeonni.png" alt="" />
+                  <ImageSearch
+                    type="text"
+                    placeholder="이미지 검색"
+                    value={input}
+                    onChange={onInput}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onSearch();
+                      }
+                    }}
+                  />
+                  <ImageModal
+                    isOpen={modalIsOpen}
+                    onClose={setModalIsOpen}
+                    image={image}
+                    handler={photoHandler}
+                    flowHandler={flowHandler}
+                  />
+                </label>
+              </div>
+            )}
+
+            {flow === PostFlow.Form && (
+              <div style={{ display: 'flex' }}>
+                <ImageContainer>
+                  <ImageSlider
+                    images={photos}
+                    deleteHandler={(e) => {
+                      photoHandler.remove(e);
+                      if (photos.length === 0) flowHandler.prev();
+                    }}
+                  />
+                  <AddPhoto>
+                    <label htmlFor="photos">
+                      <PlusIcon />
+                    </label>
+                    <input
+                      id="photos"
+                      type="file"
+                      multiple
+                      hidden
+                      accept="image/*"
+                      onChange={photoHandler.add}
+                    />
+                  </AddPhoto>
+                </ImageContainer>
+                <VrLine />
+                {/* user input form */}
+                <UserInputForm>
+                  <Author>
+                    <UserAvatar
+                      username={logonUser.username}
+                      src={logonUser?.avatar}
+                      size={32}
+                    />
+                    {/* <div className="avatar">
+                      <img src={logonUser?.avatar} alt="avatar" />
+                    </div> */}
+                    <span>{logonUser.username}</span>
+                  </Author>
+                  <div className="content">
+                    <InputArea text={content} textHandler={contentHandler} />
                   </div>
-                  <span>asdf</span>
-                </Author>
-                <div className="content">
-                  <InputArea text={text} textHandler={textHandler} />
-                </div>
-                <HrLine />
-                <div className="placeinput" />
-              </UserInputForm>
-            </div>
-          )}
-        </Content>
-      </Container>
-    </BackgroundLayer>
+                  <HrLine />
+                  <div className="placeinput" />
+                </UserInputForm>
+              </div>
+            )}
+          </Content>
+        </Container>
+      </BackgroundLayer>
+    )
   );
 };
 
@@ -264,7 +296,6 @@ const Container = styled(motion.div)`
   flex-direction: column;
   margin: auto;
 
-  border: 1px solid black;
   border-radius: 12px;
 
   @media screen and (max-height: 500px) {
@@ -283,17 +314,6 @@ const Header = styled.div`
 
 const Content = styled.div`
   display: flex;
-`;
-
-const HrLine = styled.hr<{ $strong?: boolean }>`
-  border: 0;
-  border-top: ${({ theme }) => theme.lightTheme.borderColor};
-  margin: 0;
-`;
-
-const VrLine = styled.div`
-  border-left: ${({ theme }) => theme.lightTheme.borderColor};
-  margin: 0;
 `;
 
 const BackgroundLayer = styled.div<{ $open?: boolean }>`
@@ -366,5 +386,5 @@ const ImageSearch = styled.input`
   height: 2rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid ${({ theme }) => theme.lightTheme.borderColor};
+  border: ${({ theme }) => theme.lightTheme.borderColor};
 `;

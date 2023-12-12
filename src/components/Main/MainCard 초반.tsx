@@ -1,14 +1,7 @@
-/* --------------------------------------import start-------------------------------------- */
-import { useState, useEffect, SetStateAction } from 'react';
+/* --------------------------------------import-------------------------------------- */
+import React, { useState, Component, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-
-/* 📎 service.ts (axios) */
-import {
-  patchHeart,
-  getHeartsInfo,
-  postHeartsInfo,
-  deleteHeartsInfo,
-} from '@services/posts.service';
+import { patchHeart } from '@services/posts.service';
 
 /* 📎폰트 어썸 */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -30,23 +23,17 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
 /* 📎 인터페이스 : MainCardProps */
-import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
-import { useLogonUser } from '@contexts/LogonUser';
-import UserAvatar from '@components/common/UserAvatar';
+import { Post, PostAndUser } from '@interfaces/post.interface';
 
-/* --------------------------------------import end-------------------------------------- */
+/* --------------------------------------import-------------------------------------- */
 
 interface MainCardProps {
-  post: PostWithUser;
+  post: PostAndUser;
   onlyPost: Post;
-  heartInfo: HeartsInfo;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
-const MainCard = ({
-  post,
-  onlyPost, // heartInfo,
-}: MainCardProps): JSX.Element => {
+const MainCard = ({ post, onlyPost }: MainCardProps): JSX.Element => {
   /*  📝 사용자 게시글 입력 */
   const textContent = post.content;
   const maxLength = 30; // 원하는 글자 수
@@ -55,45 +42,36 @@ const MainCard = ({
   const [isTextShown, setIsTextShown] = useState(false);
 
   /* 📂 2. 하트 flug  */
-  const [isHeartShown, setIsHeartShown] = useState(false);
+  const [isHeartShown, setIsHeartShown] = useState(post.heart);
+
+  /* 📂 3. 바운스 flug */
+  const [bounce, setBounce] = useState(false);
+
+  /* 📂 4. 게시글 코멘트 */
+  const [postComment, setPostComment] = useState('');
 
   // 2.1 물리적 하트 변경
   const toggleHeart = () => {
     setIsHeartShown((prev) => !prev);
   };
 
-  // 2.2 하트
-  const [heartInfo, setHeartInfo] = useState<HeartsInfo[]>([]);
-
-  /* 📂 3. 바운스 flug */
-  const [bounce, setBounce] = useState(false);
-
-  /* 📂 4. 현재 로그인 유저 */
-  const logonUser = useLogonUser(); /* logonUser.id를 사용해야 함 */
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
-  const postHeart = async (heartInfo: { user_id: number; post_id: number }) => {
-    const res = await postHeartsInfo(heartInfo);
+  // 2.2 json 서버 제공
+  const changeHeart = async () => {
+    const res = await patchHeart({ ...onlyPost, heart: isHeartShown });
+    // console.log('patchHeart의 결과: ', res);
     return res;
   };
 
-  const deleteHeart = async (heartId: number) => {
-    const res = await deleteHeartsInfo(heartId);
-    return res;
-  };
-
-  //  -----------------------------------------useEffect start----------------------------------
-
-  /* FIXME:하트 */
+  // 2.3 json 서버 하트 변경
   useEffect(() => {
-    const getHeartsInfoFun = async () => {
-      const result = await getHeartsInfo();
-      setHeartInfo(result);
-    };
-    getHeartsInfoFun();
+    changeHeart();
   }, [isHeartShown]);
 
-  //  -----------------------------------------useEffect end----------------------------------
+  // FIXME: 코맨트 추가
+  const handleCommentChange = (e) => {
+    setPostComment(e.target.value);
+    // console.log(postComment);
+  };
 
   return (
     <StyledMainCard>
@@ -101,10 +79,10 @@ const MainCard = ({
       <div className="element-top">
         {/* 1.1 상단 좌측 유저 이미지 */}
         <div className="element-image">
-          <UserAvatar
-            username={post.user.username}
-            src={post.user?.avatar}
-            size={80}
+          <img
+            className="element-userImg"
+            alt="Element userImg"
+            src={post.user.avatar} /* 🟡 사용자 이미지 입력 🟡  */
           />
         </div>
 
@@ -136,12 +114,12 @@ const MainCard = ({
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StyledSlider {...settings}>
           {/* 🟡 map 메서드로 , 게시 사진 수 만큼 생성 🟡 */}
-          {post.photos.map((photo) => (
+          {post.imgs.map((img) => (
             <div key={post.id} className="mainImg_box">
               <img
                 className="element-userImg"
                 alt="Element userImg"
-                src={photo}
+                src={img}
               />
             </div>
           ))}
@@ -151,49 +129,23 @@ const MainCard = ({
       {/* 🟢 3. 좋아요  + 게시글 모달 🟢 */}
       <div className="element-wrap-image">
         {/* 3.1 좋아요  */}
-        {/* 현재 로그인한 유저 === 좋아요를 누른 유저가 같으면 좋아요 */}
-        {/* FIXME: */}
-        {heartInfo.find((heart) => {
-          // console.log('heart 출력', heart);
-          //   로그인한 유저 = 좋아요한 유저    +    현재 포스트 id = 좋아요에 등록된 포스트 id
-          return logonUser?.id === heart.user_id && post.id === heart.post_id;
-        }) ? (
+        {isHeartShown ? (
           /* 3.1.1 ❤️ */
           <FontAwesomeIcon
-            key={post.id}
             bounce={bounce}
             className="solidHeart"
             icon={solidHeart}
-            // 클릭
-            onClick={() => {
-              toggleHeart();
-              console.log(isHeartShown);
-              // 똑 같은 하트 누르면 삭제
-              const heartToDelete = heartInfo.find(
-                (heart) =>
-                  logonUser?.id === heart.user_id && post.id === heart.post_id
-              );
-              console.log('하트 아이디 값 확인 : ', heartToDelete);
-              if (heartToDelete) {
-                deleteHeart(heartToDelete.id);
-              }
-            }}
+            onClick={toggleHeart}
           />
         ) : (
           /* 3.1.2 ♡ */
           <StyledSolidHeart
-            key={post.id}
             className="regularHeart"
             icon={regularHeart}
             onClick={() => {
-              // 클릭
               toggleHeart();
-              console.log(isHeartShown);
               setBounce(true);
               setTimeout(() => setBounce(false), 1000);
-              if (logonUser) {
-                postHeart({ user_id: logonUser?.id, post_id: post.id });
-              }
             }}
           />
         )}
@@ -235,7 +187,11 @@ const MainCard = ({
       {/* 🟢 5. 댓글 달기  🟢 */}
       <div className="element-comment">
         <div className="element">
-          <textarea className="text-wrapper" placeholder="댓글 달기..." />
+          <textarea
+            className="text-wrapper"
+            placeholder="댓글 달기..."
+            onChange={handleCommentChange}
+          />
         </div>
         <button
           type="button"
@@ -249,9 +205,9 @@ const MainCard = ({
     </StyledMainCard>
   );
 };
-/* ------------------------------------- MainCard end ------------------------------------- */
+/* -------------------------------------MainCard------------------------------------- */
 
-/* ------------------------------------- 💅 Styled Component start ------------------------------------- */
+/* -------------------------------------💅💅Styled Component------------------------------------- */
 //  바운스 키프레임
 const bounceAnimation = keyframes`
   0%, 100% {
@@ -375,20 +331,20 @@ const StyledMainCard = styled.div`
   /* 하트 아이콘 */
   & .solidHeart {
     color: #ff0000;
-    height: 40px;
-    width: 40px;
+    height: 60px;
+    width: 60px;
     cursor: pointer;
   }
   /* 빈하트 아이콘 */
   & .regularHeart {
-    height: 40px;
-    width: 40px;
+    height: 60px;
+    width: 60px;
     cursor: pointer;
   }
   /* 코멘트 아이콘 */
   & .comment {
-    height: 40px;
-    width: 40px;
+    height: 60px;
+    width: 60px;
     margin-left: 30px;
     cursor: pointer;
   }
@@ -529,36 +485,26 @@ const StyledSlider = styled(Slider)`
     position: initial;
   }
 
+  /* < 좌측 화살표  */
   & .slick-prev {
     left: 8px;
+    z-index: 1;
 
     &::before {
-      color: gray;
+      color: #ffffff;
     }
   }
 
+  /* > 우측 화살표  */
   & .slick-next {
     right: 8px;
+    z-index: 1;
 
     &::before {
-      color: gray;
-    }
-  }
-
-  & .slick-prev,
-  .slick-next {
-    z-index: 1;
-    opacity: 0.2;
-    transition: opacity 0.2s ease-in-out;
-  }
-
-  &:hover {
-    .slick-prev,
-    .slick-next {
-      opacity: 1;
+      color: #ffffff;
     }
   }
 `; /* 🟡 캐러셀 스타일링 終🟡 */
-/* ------------------------------------- 💅 Styled Component end ------------------------------------- */
+/* -------------------------------------Styled Component------------------------------------- */
 
 export default MainCard;
