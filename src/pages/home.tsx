@@ -8,7 +8,6 @@ const Container = styled.div`
   flex-direction: row;
   height: 100vh;
   width: 100vw;
-  background-color: #ccc;
 `;
 
 function HomePage() {
