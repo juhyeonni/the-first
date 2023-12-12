@@ -9,7 +9,7 @@ interface AvatarProps {
 
 const UserAvatar = (props: AvatarProps) => {
   return (
-    <Container username={props.username} size={props.size}>
+    <Container $username={props.username} $size={props.size}>
       {props.src ? (
         <img src={props.src} alt="avatar" />
       ) : (
@@ -19,9 +19,9 @@ const UserAvatar = (props: AvatarProps) => {
   );
 };
 
-const Container = styled.div<{ username: string; size?: number }>`
-  width: ${(props) => props.size || 32}px;
-  height: ${(props) => props.size || 32}px;
+const Container = styled.div<{ $username: string; $size?: number }>`
+  width: ${(props) => props.$size || 32}px;
+  height: ${(props) => props.$size || 32}px;
   border-radius: 50%;
 
   background-color: #e8e8e8;
@@ -42,9 +42,9 @@ const Container = styled.div<{ username: string; size?: number }>`
     align-items: center;
     user-select: none;
 
-    font-size: ${(props) => (props.size ? props.size / 2 : 16)}px;
+    font-size: ${(props) => (props.$size ? props.$size / 2 : 16)}px;
 
-    background-color: ${(props) => getColorFromUsername(props.username)};
+    background-color: ${(props) => getColorFromUsername(props.$username)};
   }
 `;
 
