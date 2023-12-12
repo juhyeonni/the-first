@@ -32,3 +32,63 @@ export function getFormattedElapsedTime(
     );
   }
 }
+
+export const getColorFromUsername = (username: string) => {
+  const firstLetter = username[0].toUpperCase();
+  switch (firstLetter) {
+    case 'A':
+      return '#FF5733';
+    case 'B':
+      return '#FFBD33';
+    case 'C':
+      return '#FFD633';
+    case 'D':
+      return '#D6FF33';
+    case 'E':
+      return '#BDFF33';
+    case 'F':
+      return '#73FF33';
+    case 'G':
+      return '#33FF57';
+    case 'H':
+      return '#33FFBD';
+    case 'I':
+      return '#33FFD6';
+    case 'J':
+      return '#33D6FF';
+    case 'K':
+      return '#33BDFF';
+    case 'L':
+      return '#3373FF';
+    case 'M':
+      return '#5733FF';
+    case 'N':
+      return '#BD33FF';
+    case 'O':
+      return '#D633FF';
+    case 'P':
+      return '#FF33D6';
+    case 'Q':
+      return '#FF33BD';
+    case 'R':
+      return '#FF3373';
+    case 'S':
+      return '#FF3333';
+    case 'T':
+      return '#FF5733';
+    case 'U':
+      return '#FFBD33';
+    case 'V':
+      return '#FFD633';
+    case 'W':
+      return '#D6FF33';
+    case 'X':
+      return '#BDFF33';
+    case 'Y':
+      return '#73FF33';
+    case 'Z':
+      return '#33FF57';
+    default:
+      return '#f0f0f0';
+  }
+};
