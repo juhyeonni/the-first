@@ -70,25 +70,15 @@ const MainCard = ({
   /* 📂 3. 바운스 flug */
   const [bounce, setBounce] = useState(false);
 
-  /* 📂 4. 게시글 코멘트 */
-  const [postComment, setPostComment] = useState('');
-
-  /* 📂 5. 현재 로그인 유저 */
+  /* 📂 4. 현재 로그인 유저 */
   const logonUser = useLogonUser(); /* logonUser.id를 사용해야 함 */
-
-  /* 🟡 보류 🟡 */
-  // 2.2 json 서버 제공
-  // const changeHeart = async () => {
-  //   const res = await patchHeart({ ...onlyPost, heart: isHeartShown });
-  //   // console.log('patchHeart의 결과: ', res);
-  //   return res;
-  // };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
   const postHeart = async (heartInfo: { user_id: number; post_id: number }) => {
     const res = await postHeartsInfo(heartInfo);
     return res;
   };
+
   const deleteHeart = async (heartId: number) => {
     const res = await deleteHeartsInfo(heartId);
     return res;
@@ -103,23 +93,9 @@ const MainCard = ({
       setHeartInfo(result);
     };
     getHeartsInfoFun();
-  }, []);
-
-  /* 🟡 보류 🟡 */
-  /* json 서버 하트 변경 */
-  // useEffect(() => {
-  //   changeHeart();
-  // }, [isHeartShown]);
+  }, [isHeartShown]);
 
   //  -----------------------------------------useEffect end----------------------------------
-
-  // FIXME: 코맨트 추가
-  const handleCommentChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setPostComment(e.target.value);
-    // console.log(postComment);
-  };
 
   return (
     <StyledMainCard>
@@ -178,9 +154,9 @@ const MainCard = ({
       <div className="element-wrap-image">
         {/* 3.1 좋아요  */}
         {/* 현재 로그인한 유저 === 좋아요를 누른 유저가 같으면 좋아요 */}
-        {/* FIXME:  */}
+        {/* FIXME: */}
         {heartInfo.find((heart) => {
-          console.log('heart 출력', heart);
+          // console.log('heart 출력', heart);
           //   로그인한 유저 = 좋아요한 유저    +    현재 포스트 id = 좋아요에 등록된 포스트 id
           return logonUser?.id === heart.user_id && post.id === heart.post_id;
         }) ? (
@@ -190,7 +166,20 @@ const MainCard = ({
             bounce={bounce}
             className="solidHeart"
             icon={solidHeart}
-            onClick={toggleHeart}
+            // 클릭
+            onClick={() => {
+              toggleHeart();
+              console.log(isHeartShown);
+              // 똑 같은 하트 누르면 삭제
+              const heartToDelete = heartInfo.find(
+                (heart) =>
+                  logonUser?.id === heart.user_id && post.id === heart.post_id
+              );
+              console.log('하트 아이디 값 확인 : ', heartToDelete);
+              if (heartToDelete) {
+                deleteHeart(heartToDelete.id);
+              }
+            }}
           />
         ) : (
           /* 3.1.2 ♡ */
@@ -199,7 +188,9 @@ const MainCard = ({
             className="regularHeart"
             icon={regularHeart}
             onClick={() => {
+              // 클릭
               toggleHeart();
+              console.log(isHeartShown);
               setBounce(true);
               setTimeout(() => setBounce(false), 1000);
               if (logonUser) {
@@ -246,11 +237,7 @@ const MainCard = ({
       {/* 🟢 5. 댓글 달기  🟢 */}
       <div className="element-comment">
         <div className="element">
-          <textarea
-            className="text-wrapper"
-            placeholder="댓글 달기..."
-            onChange={handleCommentChange}
-          />
+          <textarea className="text-wrapper" placeholder="댓글 달기..." />
         </div>
         <button
           type="button"
