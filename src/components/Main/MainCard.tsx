@@ -32,6 +32,7 @@ import Slider, { Settings } from 'react-slick';
 /* 📎 인터페이스 : MainCardProps */
 import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
 import { useLogonUser } from '@contexts/LogonUser';
+import UserAvatar from '@components/common/UserAvatar';
 
 /* --------------------------------------import end-------------------------------------- */
 
@@ -100,10 +101,10 @@ const MainCard = ({
       <div className="element-top">
         {/* 1.1 상단 좌측 유저 이미지 */}
         <div className="element-image">
-          <img
-            className="element-userImg"
-            alt="Element userImg"
-            src={post.user.avatar} /* 🟡 사용자 이미지 입력 🟡  */
+          <UserAvatar
+            username={post.user.username}
+            src={post.user?.avatar}
+            size={80}
           />
         </div>
 

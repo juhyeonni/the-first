@@ -11,6 +11,7 @@ import useModal from '@hooks/useModal';
 import useToggle from '@hooks/useToggle';
 import { useNavigate } from 'react-router-dom';
 import { useLogonUser } from '@contexts/LogonUser';
+import UserAvatar from '@components/common/UserAvatar';
 
 interface NavItem {
   id: string;
@@ -86,14 +87,11 @@ const Sidebar = () => {
             onClick={() => navigate(`/u/${logonUser.username}`)}
             $open={searchModal.toggler.isOpen}
           >
-            <div style={{ width: 32, height: 32, borderRadius: '50%' }}>
-              {logonUser.avatar && (
-                <img
-                  style={{ width: 32, height: 32, borderRadius: '50%' }}
-                  src={logonUser.avatar}
-                />
-              )}
-            </div>
+            <UserAvatar
+              username={logonUser.username}
+              src={logonUser?.avatar}
+              size={32}
+            />
             <span>{logonUser.username}</span>
           </Interact>
         )}

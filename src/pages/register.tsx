@@ -48,6 +48,7 @@ const RegisterPage = () => {
             <Input
               id="email"
               type="email"
+              label="이메일"
               placeholder="이메일"
               register={register}
               required
@@ -57,6 +58,7 @@ const RegisterPage = () => {
             <Input
               id="username"
               type="text"
+              label="사용자 이름"
               placeholder="사용자 이름"
               register={register}
               required
@@ -67,6 +69,7 @@ const RegisterPage = () => {
             <Input
               id="password"
               type="password"
+              label="비밀번호"
               placeholder="비밀번호"
               register={register}
               required
@@ -77,6 +80,7 @@ const RegisterPage = () => {
             <Input
               id="confirmPassword"
               type="password"
+              label="비밀번호 확인"
               placeholder="비밀번호 확인"
               register={register}
               required
