@@ -42,17 +42,18 @@ const LoginPage = () => {
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Input
               id="email"
-              type="text"
-              placeholder="사용자 이름"
+              type="email"
+              label="이메일"
+              placeholder="이메일"
               register={register}
               required
               errors={errors}
-              minLength={3}
             />
 
             <Input
               id="password"
               type="password"
+              label="비밀번호"
               placeholder="비밀번호"
               register={register}
               required
