@@ -56,8 +56,6 @@ const Input = ({
 }: InputProps) => {
   return (
     <Container>
-      {label && <Label htmlFor={id}>{label}</Label>}
-
       <InputContainer
         id={id}
         type={type}
@@ -67,7 +65,7 @@ const Input = ({
         {...register(id, {
           required: {
             value: required || false,
-            message: `${id}을(를) 입력해주세요.`,
+            message: `${label}을 입력해주세요.`,
           },
           minLength: {
             value: minLength || 0,
