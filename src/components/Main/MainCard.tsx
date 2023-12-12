@@ -62,10 +62,8 @@ const MainCard = ({
     setIsHeartShown((prev) => !prev);
   };
 
-  /* FIXME:하트 */
+  // 2.2 하트
   const [heartInfo, setHeartInfo] = useState<HeartsInfo[]>([]);
-  console.log('heartInfo 실행됨 ⬇️⬇️');
-  console.log(heartInfo);
 
   /* 📂 3. 바운스 flug */
   const [bounce, setBounce] = useState(false);
