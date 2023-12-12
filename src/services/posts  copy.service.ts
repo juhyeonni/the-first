@@ -43,4 +43,4 @@ export async function patchHeart(post: {
   return res.data;
 }
 
-export async function getHearts() {}
+// export async function getHearts() {}

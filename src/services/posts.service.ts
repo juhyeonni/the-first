@@ -79,3 +79,17 @@ export async function getHeartsInfo() {
   const res = await baseAxios.get('/hearts');
   return res.data;
 }
+
+// 하트 추가
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function postHeartsInfo(heartInfo: any) {
+  const res = await baseAxios.post('/hearts', heartInfo);
+  return res.data;
+}
+
+// 하트 삭제
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function deleteHeartsInfo(heartId: number) {
+  const res = await baseAxios.delete(`/hearts/${heartId}`);
+  return res.data;
+}

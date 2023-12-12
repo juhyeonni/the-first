@@ -178,35 +178,39 @@ const MainCard = ({
         {/* 3.1 좋아요  */}
         {/* 현재 로그인한 유저 === 좋아요를 누른 유저가 같으면 좋아요 */}
         {/* FIXME:  */}
-        {heartInfo.find((heart) => {
-          console.log('heart 출력', heart);
-          //   로그인한 유저 = 좋아요한 유저    +    현재 포스트 id = 좋아요에 등록된 포스트 id
-          return logonUser?.id === heart.user_id && post.id === heart.post_id;
-        }) ? (
-          /* 3.1.1 ❤️ */
-          <FontAwesomeIcon
-            key={post.id}
-            bounce={bounce}
-            className="solidHeart"
-            icon={solidHeart}
-            onClick={toggleHeart}
-          />
-        ) : (
-          /* 3.1.2 ♡ */
-          <StyledSolidHeart
-            key={post.id}
-            className="regularHeart"
-            icon={regularHeart}
-            onClick={() => {
-              toggleHeart();
-              setBounce(true);
-              setTimeout(() => setBounce(false), 1000);
-              if (logonUser) {
-                postHeart({ user_id: logonUser?.id, post_id: post.id });
-              }
-            }}
-          />
-        )}
+        {heartInfo
+          .filter(
+            (heart) =>
+              logonUser?.id === heart.user_id && post.id === heart.post_id
+          )
+          .map((heart) => {
+            return logonUser?.id === heart.user_id &&
+              post.id === heart.post_id ? (
+              /* 3.1.1 ❤️ */
+              <FontAwesomeIcon
+                key={post.id}
+                bounce={bounce}
+                className="solidHeart"
+                icon={solidHeart}
+                // onClick={toggleHeart}
+              />
+            ) : (
+              /* 3.1.2 ♡ */
+              <StyledSolidHeart
+                key={post.id}
+                className="regularHeart"
+                icon={regularHeart}
+                onClick={() => {
+                  toggleHeart();
+                  setBounce(true);
+                  setTimeout(() => setBounce(false), 1000);
+                  if (logonUser) {
+                    postHeart({ user_id: logonUser?.id, post_id: post.id });
+                  }
+                }}
+              />
+            );
+          })}
 
         {/* 3.2  🔍 */}
         <FontAwesomeIcon
