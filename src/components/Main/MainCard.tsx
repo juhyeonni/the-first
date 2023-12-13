@@ -411,11 +411,11 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
           flip="horizontal"
           onClick={() => {
             if (logonUser) {
-              toggleHeart();
-              console.log(isHeartShown);
-              setBounce(true);
-              setTimeout(() => setBounce(false), 1000);
-              postHeart({ user_id: logonUser?.id, post_id: post.id });
+              // toggleHeart();
+              // console.log(isHeartShown);
+              // setBounce(true);
+              // setTimeout(() => setBounce(false), 1000);
+              // postHeart({ user_id: logonUser?.id, post_id: post.id });
             } else {
               setModalOpen((prev) => !prev);
               console.log(modalOpen);
