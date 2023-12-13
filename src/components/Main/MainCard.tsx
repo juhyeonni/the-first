@@ -2,7 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
 /* --------------------------------------import start-------------------------------------- */
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { createPortal } from 'react-dom';
 
@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 
 /* 📎 service.ts (axios) */
 import {
-  patchHeart,
   getHeartsInfo,
   postHeartsInfo,
   deleteHeartsInfo,
@@ -47,16 +46,13 @@ import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
 import { useLogonUser } from '@contexts/LogonUser';
 import UserAvatar from '@components/common/UserAvatar';
 import LogoIcon from '@assets/icons/logo';
-import xmark from '@assets/icons/xmark';
-import { width } from '@fortawesome/free-regular-svg-icons/faAddressBook';
-import { relative } from 'path';
 
 /* --------------------------------------import end-------------------------------------- */
 
 interface MainCardProps {
   post: PostWithUser;
   onlyPost: Post;
-  setIsPostDeleted: any;
+  setIsPostDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
@@ -146,9 +142,9 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const ModalPortal = ({ children }) => {
+  const ModalPortal = ({ children }: { children: ReactNode }) => {
     const target = document.querySelector('.container.start');
-    return createPortal(children, target);
+    return createPortal(children, target as Element | DocumentFragment);
   };
 
   /* 🟡🟡🟡🟡🟡🟡🟡  */
@@ -360,7 +356,6 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
                   </Header>
                   <Form onSubmit={handleSubmit(onSubmit)}>
                     <Input
-                      style={{ hight: '30px' }}
                       id="email"
                       type="email"
                       label="이메일"
