@@ -3,6 +3,7 @@ import { SearchType } from '@interfaces/search.interface';
 import { Place } from '@interfaces/place.interface';
 import { Tag } from '@interfaces/tag.interface';
 import { User } from '@interfaces/user.interface';
+import UserAvatar from '@components/common/UserAvatar';
 
 interface SearchItemProps {
   data: Partial<User & Tag & Place>;
@@ -18,7 +19,11 @@ const SearchItem = (props: SearchItemProps) => {
       {type === 'user' ? (
         <div>
           <div className="visualization">
-            <img src={data.avatar} alt="profile" />
+            <UserAvatar
+              username={data.username || ''}
+              src={data.avatar}
+              size={44}
+            />
           </div>
 
           <div className="content">
