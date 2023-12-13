@@ -33,7 +33,7 @@ const InputContainer = styled.input<{ $errors: FieldErrors; id: string }>`
 
   border: 1px solid
     ${({ $errors, id }) =>
-      $errors[id] ? '#ff0000' : 'rgb(167, 147, 147, 0.335)'};
+      $errors[id] ? '#ff0000' : 'rgba(167, 147, 147, 0.335)'};
   border-radius: 3px;
 `;
 
