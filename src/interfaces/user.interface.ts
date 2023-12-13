@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import { Post } from './post.interface';
 
 export interface User {
@@ -19,6 +20,7 @@ export interface ProfilePayload extends Partial<Omit<User, 'id'>> {
 export interface RegisterPayload {
   email: string;
   username: string;
+  name: string;
   password: string;
 }
 

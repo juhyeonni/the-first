@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PlusIcon from '@assets/icons/plus';
@@ -7,10 +7,13 @@ import { useLogonUser } from '@contexts/LogonUser';
 import { ProfilePayload, User } from '@interfaces/user.interface';
 import { registerPhoto } from '@services/posts.service';
 import { editProfile } from '@services/users.service';
+import UserAvatar from '@components/common/UserAvatar';
+import ErrorMsg from '@components/common/ErrorMsg';
 
 const useEditProfile = (user: User) => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<ProfilePayload>(user);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
   const editHandler = {
@@ -26,12 +29,16 @@ const useEditProfile = (user: User) => {
       editProfile({
         ...profile,
         id: user?.id,
-      }).then((data) => {
-        setProfile(data);
-        navigate(`/redirect?dest=/u/${user.username}`);
-      });
-
-      setIsEditing(false);
+      })
+        .then((data) => {
+          setProfile(data);
+          navigate(`/redirect?dest=/u/${user.username}`);
+          setIsEditing(false);
+        })
+        .catch((e) => {
+          setErrorMsg(e.message);
+          return;
+        });
     },
   };
 
@@ -65,84 +72,94 @@ const useEditProfile = (user: User) => {
     },
   };
 
-  return { isEditing, profile, editHandler, editDataHandler };
+  useEffect(() => {
+    setErrorMsg('');
+  }, [profile]);
+
+  return { isEditing, profile, errorMsg, editHandler, editDataHandler };
 };
 
 interface MyProfileProps {
   user: User;
 }
 const MyProfile = (props: MyProfileProps) => {
-  const { isEditing, profile, editHandler, editDataHandler } = useEditProfile(
-    props.user
-  );
+  const { isEditing, profile, errorMsg, editHandler, editDataHandler } =
+    useEditProfile(props.user);
   const logonUser = useLogonUser();
 
   return (
-    <Container>
-      <Header>
-        <Input
-          className="username"
-          readOnly={!isEditing}
-          onChange={editDataHandler.username}
-          value={profile.username}
-          $length={profile.username?.length}
-        />
-        {isEditing ? (
-          <>
-            <EditButton onClick={editHandler.submit}>완료</EditButton>
-            <EditButton onClick={editHandler.cancel}>취소</EditButton>
-          </>
-        ) : (
-          logonUser?.id === profile.id && (
-            <EditButton onClick={editHandler.start}>편집</EditButton>
-          )
-        )}
-      </Header>
-      <Main className="main">
-        <Avatar>
-          <img src={profile.avatar} alt="avatar" className="img" />
-
-          {isEditing && (
-            <label
-              htmlFor="avatar"
-              style={{ position: 'absolute', cursor: 'pointer' }}
-            >
-              <PlusIcon />
-            </label>
+    profile && (
+      <Container>
+        <Header>
+          <Input
+            className="username"
+            readOnly={!isEditing}
+            onChange={editDataHandler.username}
+            value={profile.username}
+            $length={profile.username?.length}
+          />
+          {isEditing ? (
+            <>
+              <EditButton onClick={editHandler.submit}>완료</EditButton>
+              <EditButton onClick={editHandler.cancel}>취소</EditButton>
+            </>
+          ) : (
+            logonUser?.id === profile.id && (
+              <EditButton onClick={editHandler.start}>편집</EditButton>
+            )
           )}
+          <ErrorMsg msg={errorMsg} />
+        </Header>
+        <Main className="main">
+          <Avatar>
+            <UserAvatar
+              username={props.user.username}
+              src={profile.avatar}
+              size={90}
+            />
 
-          <input
-            type="file"
-            id="avatar"
-            accept="image/*"
-            onChange={editDataHandler.avatar}
-            hidden
-          />
-        </Avatar>
-        <UserInformation>
-          <Input
-            className="name"
-            readOnly={!isEditing}
-            onChange={editDataHandler.name}
-            value={profile.name}
-            $length={profile.name?.length}
-          />
-          <textarea
-            className="bio"
-            readOnly={!isEditing}
-            onChange={editDataHandler.bio}
-            value={profile?.bio ?? '자기 소개글이 없습니다.'}
-          />
-          <Input
-            className="email"
-            readOnly={!isEditing}
-            onChange={editDataHandler.email}
-            value={profile.email}
-            $length={profile.email?.length}
-          />
-        </UserInformation>
-      </Main>
-    </Container>
+            {isEditing && (
+              <label
+                htmlFor="avatar"
+                style={{ position: 'absolute', cursor: 'pointer' }}
+              >
+                <PlusIcon />
+              </label>
+            )}
+
+            <input
+              type="file"
+              id="avatar"
+              accept="image/*"
+              onChange={editDataHandler.avatar}
+              hidden
+            />
+          </Avatar>
+          <UserInformation>
+            <Input
+              className="name"
+              readOnly={!isEditing}
+              onChange={editDataHandler.name}
+              value={profile.name}
+              $length={profile.name?.length}
+            />
+            <textarea
+              className="bio"
+              readOnly={!isEditing}
+              onChange={editDataHandler.bio}
+              value={profile?.bio ?? '자기 소개글이 없습니다.'}
+            />
+            <Input
+              className="email"
+              readOnly={!isEditing}
+              onChange={editDataHandler.email}
+              value={profile.email}
+              $length={profile.email?.length}
+            />
+          </UserInformation>
+        </Main>
+      </Container>
+    )
   );
 };
 

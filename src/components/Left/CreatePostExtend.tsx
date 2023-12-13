@@ -13,6 +13,7 @@ import { createPost } from '@services/posts.service';
 import { HrLine, VrLine } from '@components/common/Line';
 import React from 'react';
 import { useLogonUser } from '@contexts/LogonUser';
+import UserAvatar from '@components/common/UserAvatar';
 
 interface CreatePostExtendProps {
   open?: boolean;
@@ -134,132 +135,139 @@ const CreatePostExtend = (props: CreatePostExtendProps) => {
   };
 
   return (
-    <BackgroundLayer ref={props.observe} $open={props.open}>
-      <Container
-        variants={containerVariants}
-        initial="closed"
-        animate={props.open ? 'open' : 'closed'}
-        layout="preserve-aspect"
-      >
-        <Header>
-          {flow === PostFlow.Photo && (
-            <>
-              <div />
-              <h3>새 게시물 만들기</h3>
-              <div />
-            </>
-          )}
-          {flow === PostFlow.Form && (
-            <>
-              <button onClick={flowHandler.prev}>{'<'}</button>
-              <h3>게시물 만들기</h3>
-              <button onClick={handler.post}>공유</button>
-            </>
-          )}
-        </Header>
+    logonUser && (
+      <BackgroundLayer ref={props.observe} $open={props.open}>
+        <Container
+          variants={containerVariants}
+          initial="closed"
+          animate={props.open ? 'open' : 'closed'}
+          layout="preserve-aspect"
+        >
+          <Header>
+            {flow === PostFlow.Photo && (
+              <>
+                <div />
+                <h3>새 게시물 만들기</h3>
+                <div />
+              </>
+            )}
+            {flow === PostFlow.Form && (
+              <>
+                <button onClick={flowHandler.prev}>{'<'}</button>
+                <h3>게시물 만들기</h3>
+                <button onClick={handler.post}>공유</button>
+              </>
+            )}
+          </Header>
 
-        <HrLine />
-        <Content>
-          {flow === PostFlow.Photo && (
-            <div
-              style={{
-                display: 'flex',
-                width: '360px',
-                height: '360px',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-            >
-              <label
-                htmlFor="photos"
+          <HrLine />
+          <Content>
+            {flow === PostFlow.Photo && (
+              <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
+                  width: '360px',
+                  height: '360px',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  rowGap: '1rem',
-                  cursor: 'pointer',
+                  position: 'relative',
                 }}
               >
-                <PlusIcon width={64} height={64} />
-                <span>컴퓨터에서 선택</span>
-                <input
-                  id="photos"
-                  type="file"
-                  multiple
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => {
-                    photoHandler.add(e);
-                    flowHandler.next();
+                <label
+                  htmlFor="photos"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    rowGap: '1rem',
+                    cursor: 'pointer',
                   }}
-                />
-                <ImageSearch
-                  type="text"
-                  placeholder="이미지 검색"
-                  value={input}
-                  onChange={onInput}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      onSearch();
-                    }
-                  }}
-                />
-                <ImageModal
-                  isOpen={modalIsOpen}
-                  onClose={setModalIsOpen}
-                  image={image}
-                  handler={photoHandler}
-                  flowHandler={flowHandler}
-                />
-              </label>
-            </div>
-          )}
-
-          {flow === PostFlow.Form && (
-            <div style={{ display: 'flex' }}>
-              <ImageContainer>
-                <ImageSlider
-                  images={photos}
-                  deleteHandler={(e) => {
-                    photoHandler.remove(e);
-                    if (photos.length === 0) flowHandler.prev();
-                  }}
-                />
-                <AddPhoto>
-                  <label htmlFor="photos">
-                    <PlusIcon />
-                  </label>
+                >
+                  <PlusIcon width={64} height={64} />
+                  <span>컴퓨터에서 선택</span>
                   <input
                     id="photos"
                     type="file"
                     multiple
                     hidden
                     accept="image/*"
-                    onChange={photoHandler.add}
+                    onChange={(e) => {
+                      photoHandler.add(e);
+                      flowHandler.next();
+                    }}
                   />
-                </AddPhoto>
-              </ImageContainer>
-              <VrLine />
-              {/* user input form */}
-              <UserInputForm>
-                <Author>
-                  <div className="avatar">
-                    <img src={logonUser?.avatar} alt="avatar" />
+                  <ImageSearch
+                    type="text"
+                    placeholder="이미지 검색"
+                    value={input}
+                    onChange={onInput}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onSearch();
+                      }
+                    }}
+                  />
+                  <ImageModal
+                    isOpen={modalIsOpen}
+                    onClose={setModalIsOpen}
+                    image={image}
+                    handler={photoHandler}
+                    flowHandler={flowHandler}
+                  />
+                </label>
+              </div>
+            )}
+
+            {flow === PostFlow.Form && (
+              <div style={{ display: 'flex' }}>
+                <ImageContainer>
+                  <ImageSlider
+                    images={photos}
+                    deleteHandler={(e) => {
+                      photoHandler.remove(e);
+                      if (photos.length === 0) flowHandler.prev();
+                    }}
+                  />
+                  <AddPhoto>
+                    <label htmlFor="photos">
+                      <PlusIcon />
+                    </label>
+                    <input
+                      id="photos"
+                      type="file"
+                      multiple
+                      hidden
+                      accept="image/*"
+                      onChange={photoHandler.add}
+                    />
+                  </AddPhoto>
+                </ImageContainer>
+                <VrLine />
+                {/* user input form */}
+                <UserInputForm>
+                  <Author>
+                    <UserAvatar
+                      username={logonUser.username}
+                      src={logonUser?.avatar}
+                      size={32}
+                    />
+                    {/* <div className="avatar">
+                      <img src={logonUser?.avatar} alt="avatar" />
+                    </div> */}
+                    <span>{logonUser.username}</span>
+                  </Author>
+                  <div className="content">
+                    <InputArea text={content} textHandler={contentHandler} />
                   </div>
-                  <span>{logonUser?.username}</span>
-                </Author>
-                <div className="content">
-                  <InputArea text={content} textHandler={contentHandler} />
-                </div>
-                <HrLine />
-                <div className="placeinput" />
-              </UserInputForm>
-            </div>
-          )}
-        </Content>
-      </Container>
-    </BackgroundLayer>
+                  <HrLine />
+                  <div className="placeinput" />
+                </UserInputForm>
+              </div>
+            )}
+          </Content>
+        </Container>
+      </BackgroundLayer>
+    )
   );
 };
 

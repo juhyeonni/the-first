@@ -1,7 +1,25 @@
-/* --------------------------------------import-------------------------------------- */
-import { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable react/button-has-type */
+/* --------------------------------------import start-------------------------------------- */
+import { useState, useEffect, ReactNode } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { patchHeart } from '@services/posts.service';
+import { createPortal } from 'react-dom';
+
+import Button from '@components/Button';
+import Input from '@components/Input';
+import { login } from '@services/auth.service';
+import { setAuth } from '@utils/auth';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+
+/* 📎 service.ts (axios) */
+import {
+  getHeartsInfo,
+  postHeartsInfo,
+  deleteHeartsInfo,
+  deletePosts,
+} from '@services/posts.service';
 
 /* 📎폰트 어썸 */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -10,6 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEllipsis,
   faHeart as solidHeart,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
@@ -23,16 +42,47 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 
 /* 📎 인터페이스 : MainCardProps */
-import { PostWithUser } from '@interfaces/post.interface';
+import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
+import { useLogonUser } from '@contexts/LogonUser';
+import UserAvatar from '@components/common/UserAvatar';
+import LogoIcon from '@assets/icons/logo';
 
-/* --------------------------------------import-------------------------------------- */
+/* --------------------------------------import end-------------------------------------- */
 
 interface MainCardProps {
   post: PostWithUser;
+  onlyPost: Post;
+  setIsPostDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
-const MainCard = ({ post }: MainCardProps): JSX.Element => {
+const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    login({
+      email: data['email'],
+      password: data['password'],
+    })
+      .then((data) => {
+        setAuth(data);
+        window.location.href = '/';
+      })
+      .catch((e) => {
+        setErrorMsg(e.message);
+      });
+  };
+
   /*  📝 사용자 게시글 입력 */
   const textContent = post.content;
   const maxLength = 30; // 원하는 글자 수
@@ -41,36 +91,101 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
   const [isTextShown, setIsTextShown] = useState(false);
 
   /* 📂 2. 하트 flug  */
-  const [isHeartShown, setIsHeartShown] = useState(post.heart);
-
-  /* 📂 3. 바운스 flug */
-  const [bounce, setBounce] = useState(false);
-
-  /* 📂 4. 게시글 코멘트 */
-  const [postComment, setPostComment] = useState('');
+  const [isHeartShown, setIsHeartShown] = useState(false);
 
   // 2.1 물리적 하트 변경
   const toggleHeart = () => {
     setIsHeartShown((prev) => !prev);
   };
 
-  // 2.2 json 서버 제공
-  const changeHeart = async () => {
-    const res = await patchHeart({ ...post, heart: isHeartShown });
-    // console.log('patchHeart의 결과: ', res);
+  // 2.2 하트
+  const [heartInfo, setHeartInfo] = useState<HeartsInfo[]>([]);
+
+  // 2.3 하트 수정 함수
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
+  const postHeart = async (heartInfo: { user_id: number; post_id: number }) => {
+    const res = await postHeartsInfo(heartInfo);
     return res;
   };
 
-  // 2.3 json 서버 하트 변경
+  // 2.4 하트 삭제 함수
+  const deleteHeart = async (heartId: number) => {
+    const res = await deleteHeartsInfo(heartId);
+    return res;
+  };
+
+  /* 📂 3. 바운스 flug */
+  const [bounce, setBounce] = useState(false);
+
+  /* 📂 4. 현재 로그인 유저 */
+  const logonUser = useLogonUser(); /* logonUser.id를 사용해야 함 */
+
+  /* 📂 5. 메인 포스트 삭제 메서드  */
+  const deletePost = async (postId: number) => {
+    const res = await deletePosts(postId);
+
+    if (res) {
+      // 서버 응답이 성공적으로 수신되었을 때 상태 업데이트
+      setIsModalOpen(false); // 모달 닫기
+    }
+
+    return res;
+  };
+
+  /* 🟡🟡🟡🟡🟡🟡🟡  */
+  // 삭제 후 재랜더링 여부
+  // const [isPostDeleted, setIsPostDeleted] = useState(false);
+
+  const reloaPage = () => {
+    setIsPostDeleted((prev) => !prev);
+  };
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const ModalPortal = ({ children }: { children: ReactNode }) => {
+    const target = document.querySelector('.container.start');
+    return createPortal(children, target as Element | DocumentFragment);
+  };
+
+  /* 🟡🟡🟡🟡🟡🟡🟡  */
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  //  -----------------------------------------useEffect start----------------------------------
+
+  /* FIXME:하트 */
   useEffect(() => {
-    changeHeart();
+    const getHeartsInfoFun = async () => {
+      const result = await getHeartsInfo();
+      setHeartInfo(result);
+    };
+    getHeartsInfoFun();
   }, [isHeartShown]);
 
-  // FIXME: 코맨트 추가
-  const handleCommentChange = (e) => {
-    setPostComment(e.target.value);
-    // console.log(postComment);
-  };
+  // 모달이 열렸을 때 스크롤 막기
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'; // 컴포넌트가 언마운트될 때 기본 스크롤로 돌아가도록
+    };
+  }, [modalOpen]);
+
+  //  -----------------------------------------useEffect end----------------------------------
 
   return (
     <StyledMainCard>
@@ -78,10 +193,10 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       <div className="element-top">
         {/* 1.1 상단 좌측 유저 이미지 */}
         <div className="element-image">
-          <img
-            className="element-userImg"
-            alt="Element userImg"
-            src={post.user.avatar} /* 🟡 사용자 이미지 입력 🟡  */
+          <UserAvatar
+            username={post.user.username}
+            src={post.user?.avatar}
+            size={80}
           />
         </div>
 
@@ -104,7 +219,44 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
           className="faEllipsis"
           icon={faEllipsis}
           style={{ color: '#000000' }}
+          onClick={() => {
+            if (logonUser) {
+              openModal();
+            } else {
+              setModalOpen((prev) => !prev);
+              console.log(modalOpen);
+            }
+          }}
         />
+
+        {isModalOpen && (
+          <div
+            className="frameWrap"
+            style={{ position: 'absolute', right: '0px' }}
+          >
+            <Frame>
+              <div className="DivWrapper">
+                {/* <div className="TextWrapper">삭제</div> */}
+                <button
+                  className="TextWrapper"
+                  onClick={() => {
+                    deletePost(post.id);
+                    reloaPage();
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+              <div className="Div" />
+              <div className="DivWrapper2">
+                <button className="TextWrapper2" onClick={closeModal}>
+                  취소
+                </button>
+                {/* <div className="TextWrapper2">취소</div> */}
+              </div>
+            </Frame>
+          </div>
+        )}
       </div>
 
       {/* 🟢 2. 메인 이미지 🟢 */}
@@ -128,32 +280,142 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       {/* 🟢 3. 좋아요  + 게시글 모달 🟢 */}
       <div className="element-wrap-image">
         {/* 3.1 좋아요  */}
-        {isHeartShown ? (
+        {/* 현재 로그인한 유저 === 좋아요를 누른 유저가 같으면 좋아요 */}
+
+        {heartInfo.find((heart) => {
+          // console.log('heart 출력', heart);
+          //   로그인한 유저 = 좋아요한 유저    +    현재 포스트 id = 좋아요에 등록된 포스트 id
+          return logonUser?.id === heart.user_id && post.id === heart.post_id;
+        }) ? (
           /* 3.1.1 ❤️ */
           <FontAwesomeIcon
+            key={post.id}
             bounce={bounce}
             className="solidHeart"
             icon={solidHeart}
-            onClick={toggleHeart}
+            // 클릭
+            onClick={() => {
+              toggleHeart();
+              console.log(isHeartShown);
+              // 똑 같은 하트 누르면 삭제
+              const heartToDelete = heartInfo.find(
+                (heart) =>
+                  logonUser?.id === heart.user_id && post.id === heart.post_id
+              );
+              console.log('하트 아이디 값 확인 : ', heartToDelete);
+              if (heartToDelete) {
+                deleteHeart(heartToDelete.id);
+              }
+            }}
           />
         ) : (
           /* 3.1.2 ♡ */
           <StyledSolidHeart
+            key={post.id}
             className="regularHeart"
             icon={regularHeart}
             onClick={() => {
-              toggleHeart();
-              setBounce(true);
-              setTimeout(() => setBounce(false), 1000);
+              if (logonUser) {
+                toggleHeart();
+                console.log(isHeartShown);
+                setBounce(true);
+                setTimeout(() => setBounce(false), 1000);
+                postHeart({ user_id: logonUser?.id, post_id: post.id });
+              } else {
+                setModalOpen((prev) => !prev);
+                console.log(modalOpen);
+              }
             }}
           />
         )}
+        {modalOpen && (
+          <ModalPortal>
+            <Modal>
+              <div className="modal_content">
+                {/* ------ */}
+                <Body>
+                  <FontAwesomeIcon
+                    onClick={() => {
+                      console.log('눌림');
+                      if (modalOpen) {
+                        setModalOpen(false);
+                      }
+                    }}
+                    icon={faXmark}
+                    style={{
+                      color: '#6d6d6f',
+                      width: '35px',
+                      height: '35px',
+                      position: 'absolute',
+                      right: '-30px',
+                      cursor: 'pointer',
+                    }}
+                  />
+                  <Header>
+                    <LogoIcon width={300} height={150} />
+                  </Header>
+                  <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Input
+                      id="email"
+                      type="email"
+                      label="이메일"
+                      placeholder="이메일"
+                      register={register}
+                      required
+                      errors={errors}
+                    />
 
+                    <Input
+                      id="password"
+                      type="password"
+                      label="비밀번호"
+                      placeholder="비밀번호"
+                      register={register}
+                      required
+                      errors={errors}
+                      minLength={6}
+                    />
+
+                    <div
+                      style={{
+                        height: '1rem',
+                        padding: '0.5rem',
+                        color: 'red',
+                      }}
+                    >
+                      {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
+                    </div>
+
+                    <Button label="로그인" />
+                  </Form>
+                </Body>
+                <Bottom>
+                  <BottomText>
+                    계정이 없으신가요? <Link to="/register">가입하기</Link>
+                  </BottomText>
+                </Bottom>
+                {/* ------ */}
+              </div>
+            </Modal>
+          </ModalPortal>
+        )}
         {/* 3.2  🔍 */}
         <FontAwesomeIcon
           className="comment"
           icon={faComment}
           flip="horizontal"
+          onClick={() => {
+            if (logonUser) {
+              toggleHeart();
+              console.log(isHeartShown);
+              setBounce(true);
+              setTimeout(() => setBounce(false), 1000);
+              postHeart({ user_id: logonUser?.id, post_id: post.id });
+            } else {
+              setModalOpen((prev) => !prev);
+              console.log(modalOpen);
+            }
+          }}
         />
       </div>
 
@@ -186,11 +448,7 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
       {/* 🟢 5. 댓글 달기  🟢 */}
       <div className="element-comment">
         <div className="element">
-          <textarea
-            className="text-wrapper"
-            placeholder="댓글 달기..."
-            onChange={handleCommentChange}
-          />
+          <textarea className="text-wrapper" placeholder="댓글 달기..." />
         </div>
         <button
           type="button"
@@ -204,9 +462,59 @@ const MainCard = ({ post }: MainCardProps): JSX.Element => {
     </StyledMainCard>
   );
 };
-/* -------------------------------------MainCard------------------------------------- */
+/* ------------------------------------- MainCard end ------------------------------------- */
+const Body = styled.div`
+  border-radius: 2px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`;
 
-/* -------------------------------------💅💅Styled Component------------------------------------- */
+const Header = styled.div`
+  text-align: center;
+  margin-top: 36px;
+  margin-bottom: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 32px;
+  font-style: italic;
+`;
+
+const Form = styled.form`
+  width: 350px;
+  margin: 0 2.5rem;
+`;
+
+const Bottom = styled.div`
+  margin-top: 1rem;
+  padding: 1rem;
+
+  border-radius: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+`;
+
+const BottomText = styled.div`
+  line-height: 32px;
+
+  a {
+    margin-left: 0.25rem;
+    color: #0095f6;
+    font-weight: 600;
+  }
+`;
+
+const ErrorMsg = styled.span`
+  color: red;
+
+  animation: warningShake 0.82s ease-in-out;
+`;
+
+/* ------------------------------------- 💅 Styled Component start ------------------------------------- */
 //  바운스 키프레임
 const bounceAnimation = keyframes`
   0%, 100% {
@@ -225,6 +533,99 @@ const StyledSolidHeart = styled(FontAwesomeIcon)`
           ${bounceAnimation} 1s infinite
         `
       : 'none'};
+  &:hover {
+    color: #5b5b5b;
+  }
+`;
+
+const Frame = styled.div`
+  align-items: flex-start;
+  background-color: #dadada;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  position: relative;
+
+  .div-wrapper {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    height: 36px;
+    justify-content: center;
+    padding: 10px 0px;
+    position: relative;
+    width: 220px;
+
+    .text-wrapper {
+      color: #000000;
+      font-family: 'Inter-Regular', Helvetica;
+      font-size: 30px;
+      font-weight: 400;
+      height: 35px;
+      letter-spacing: 0;
+      line-height: normal;
+      margin-bottom: -8.5px;
+      margin-top: -10.5px;
+      position: relative;
+      text-align: center;
+      white-space: nowrap;
+      width: 190px;
+    }
+  }
+
+  .div {
+    background-color: #ffffff;
+    height: 1px;
+    position: relative;
+  }
+
+  .div-wrapper-2 {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    height: 33px;
+    justify-content: center;
+    padding: 10px 0px;
+    position: relative;
+    width: 220px;
+
+    .text-wrapper-2 {
+      color: #000000;
+      font-family: 'Inter-Regular', Helvetica;
+      font-size: 30px;
+      font-weight: 400;
+      height: 35px;
+      letter-spacing: 0;
+      line-height: normal;
+      margin-bottom: -10px;
+      margin-top: -12px;
+      position: relative;
+      text-align: center;
+      white-space: nowrap;
+      width: 190px;
+    }
+  }
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  & .modal_content {
+    background-color: #fff;
+    padding: 20px 50px;
+    border-radius: 10px;
+  }
 `;
 
 const StyledMainCard = styled.div`
@@ -255,8 +656,6 @@ const StyledMainCard = styled.div`
 
   /* 🟢 1.1 Top. 좌측 상단 이미지 틀 */
   & .element-image {
-    border: 1.14px solid;
-    border-color: #000000;
     height: 80px;
     width: 80px;
     position: relative;
@@ -284,7 +683,7 @@ const StyledMainCard = styled.div`
   & .userId {
     font-size: 25px;
     font-weight: 600;
-    margin-right: 20px;
+    margin-right: 30px;
   }
 
   /* 1.3 Top. 우측 상단 ・・・ 아이콘 */
@@ -332,22 +731,25 @@ const StyledMainCard = styled.div`
   /* 하트 아이콘 */
   & .solidHeart {
     color: #ff0000;
-    height: 60px;
-    width: 60px;
+    height: 40px;
+    width: 40px;
     cursor: pointer;
   }
   /* 빈하트 아이콘 */
   & .regularHeart {
-    height: 60px;
-    width: 60px;
+    height: 40px;
+    width: 40px;
     cursor: pointer;
   }
   /* 코멘트 아이콘 */
   & .comment {
-    height: 60px;
-    width: 60px;
+    height: 40px;
+    width: 40px;
     margin-left: 30px;
     cursor: pointer;
+    &:hover {
+      color: #5b5b5b;
+    }
   }
 
   /*  아이디 + 작성 내용 ...* */
@@ -516,6 +918,6 @@ const StyledSlider = styled(Slider)`
     }
   }
 `; /* 🟡 캐러셀 스타일링 終🟡 */
-/* -------------------------------------Styled Component------------------------------------- */
+/* ------------------------------------- 💅 Styled Component end ------------------------------------- */
 
 export default MainCard;
