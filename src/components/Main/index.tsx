@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { PostWithUser, Post, HeartsInfo } from '@interfaces/post.interface';
@@ -13,6 +14,7 @@ import {
 const Main = () => {
   const [mainPosts, setMainPosts] = useState<PostWithUser[]>([]);
   const [onlyPosts, setOnlyPosts] = useState<Post[]>([]);
+  const [isPostDeleted, setIsPostDeleted] = useState(false);
 
   //  -----------------------------------------useEffect start----------------------------------
   /* 🟡 post + user 데이터 가져오기 🟡 */
@@ -33,17 +35,24 @@ const Main = () => {
       });
       setOnlyPosts(postsWithoutUser);
     });
-  }, []);
+  }, [isPostDeleted]);
 
   //  -----------------------------------------useEffect start----------------------------------
   return (
     <Container>
+      <div className="container start"></div>
       <Story />
       {/* 메인 카드 작성 */}
       <div style={{ margin: '0 auto' }}>
         {/* {[...mainPosts].reverse().map((post, index) => ( */}
         {mainPosts.map((post, index) => (
-          <MainCard key={post.id} post={post} onlyPost={onlyPosts[index]} />
+          <MainCard
+            key={post.id}
+            post={post}
+            onlyPost={onlyPosts[index]}
+            setIsPostDeleted={setIsPostDeleted}
+            // handleCloseClick={setModalOpen}
+          />
         ))}
       </div>
     </Container>
