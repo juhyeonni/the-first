@@ -2,8 +2,11 @@ import { baseAxios } from '@axios';
 import { Auth } from '@interfaces/auth.interface';
 import { LoginPayload, RegisterPayload } from '@interfaces/user.interface';
 import { AxiosError } from 'axios';
+import { validateStoreUserPayload } from './validate.service';
 
 export async function registerUser(payload: RegisterPayload) {
+  await validateStoreUserPayload(payload);
+
   try {
     const res = await baseAxios.post('/register', payload);
     return res.data;
