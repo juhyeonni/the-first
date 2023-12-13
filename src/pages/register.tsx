@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { registerUser } from '@services/auth.service';
 import { useState } from 'react';
 import { setAuth } from '@utils/auth';
+import { getNameFromEmail } from '@utils/formatter';
 
 const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -27,6 +28,7 @@ const RegisterPage = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     registerUser({
       email: data['email'],
+      name: getNameFromEmail(data['email']),
       username: data['username'],
       password: data['password'],
     })

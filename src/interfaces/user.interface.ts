@@ -20,6 +20,7 @@ export interface ProfilePayload extends Partial<Omit<User, 'id'>> {
 export interface RegisterPayload {
   email: string;
   username: string;
+  name: string;
   password: string;
 }
 
