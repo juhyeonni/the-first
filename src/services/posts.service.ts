@@ -9,7 +9,7 @@ export async function createPost(payload: PostPayload) {
 
   const photos = await registerPhotos(payload.photos);
 
-  const res = await baseAxios.post('/posts', {
+  await baseAxios.post('/posts', {
     ...payload,
     photos,
     created_at: Date.now(),
@@ -67,7 +67,7 @@ export async function registerPhoto(photo: File) {
 }
 
 // eslint-disable-next-line default-param-last
-export async function getPostPaginate(page = 1, limit = 10, options?: object) {
+export async function getPostPaginate(page = 1, limit = 10) {
   const res = await baseAxios.get(
     `/posts?_page=${page}&_limit=${limit}&_expand=user`
   );
