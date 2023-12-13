@@ -22,6 +22,13 @@ export async function getPosts(): Promise<Post[]> {
   return res.data;
 }
 
+/* 🔴 post 삭제 🔴 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function deletePosts(postId: any): Promise<Post[]> {
+  const res = await baseAxios.delete(`/posts/${postId}`);
+  return res.data;
+}
+
 // 🟡 posts와 users를 관계 쿼리 : posts와 users 같이 나옴 🟡
 // src / components / Main / index.tsx 에서 사용 중
 export async function getPostsUsers(): Promise<PostWithUser[]> {
@@ -74,7 +81,8 @@ export async function getPostsByUserId(userId: number) {
   return res.data;
 }
 
-// 🟡 하트 정보 get 🟡
+/* 🟡 하트 🟡 */
+// 하트 정보 get
 export async function getHeartsInfo() {
   const res = await baseAxios.get('/hearts');
   return res.data;

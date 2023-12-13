@@ -25,15 +25,17 @@ const Label = styled.label`
 `;
 
 const InputContainer = styled.input<{ errors: FieldErrors; id: string }>`
-  height: 24px;
+  /* FIXME:  주현아 높이 35px로 수정했다 */
+  /* height: 24px; */
+  height: 35px;
   padding: 9px 0 7px 8px;
   font-weight: 400;
-  background-color: #fff;
   outline: none;
-  background-color: rgb(250, 250, 250);
+  background-color: rgba(191, 191, 191, 0.129);
 
   border: 1px solid
-    ${({ errors, id }) => (errors[id] ? '#ff0000' : 'rgb(167, 147, 147)')};
+    ${({ errors, id }) =>
+      errors[id] ? '#ff0000' : 'rgba(167, 147, 147, 0.335)'};
   border-radius: 3px;
 `;
 
