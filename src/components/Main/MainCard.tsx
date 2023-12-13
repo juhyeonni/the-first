@@ -193,11 +193,13 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
       <div className="element-top">
         {/* 1.1 상단 좌측 유저 이미지 */}
         <div className="element-image">
-          <UserAvatar
-            username={post.user.username}
-            src={post.user?.avatar}
-            size={80}
-          />
+          <Link to={`/u/${post.user.username}`}>
+            <UserAvatar
+              username={post.user.username}
+              src={post.user?.avatar}
+              size={80}
+            />
+          </Link>
         </div>
 
         {/* 1.2 상단 좌측 아이디 */}
