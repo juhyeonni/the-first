@@ -2,7 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
 /* --------------------------------------import start-------------------------------------- */
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { createPortal } from 'react-dom';
 
@@ -47,9 +47,6 @@ import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
 import { useLogonUser } from '@contexts/LogonUser';
 import UserAvatar from '@components/common/UserAvatar';
 import LogoIcon from '@assets/icons/logo';
-import xmark from '@assets/icons/xmark';
-import { width } from '@fortawesome/free-regular-svg-icons/faAddressBook';
-import { relative } from 'path';
 
 /* --------------------------------------import end-------------------------------------- */
 

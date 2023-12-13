@@ -10,7 +10,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <LogonUser.Provider value={logonUser || null}>
+      <LogonUser.Provider value={logonUser}>
         <GlobalStyle />
         <Router />
       </LogonUser.Provider>

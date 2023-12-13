@@ -242,12 +242,14 @@ const Interact = styled.button<{
     `}
 `;
 
-const Others = styled.button<{ $open?: boolean }>`
+const Others = styled.div<{ $open?: boolean }>`
   display: flex;
   align-items: center;
   margin-top: auto;
   position: relative;
   margin-bottom: 1rem;
+
+  user-select: none;
 
   & > div.others {
     display: flex;

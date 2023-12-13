@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PlusIcon from '@assets/icons/plus';
@@ -8,10 +8,12 @@ import { ProfilePayload, User } from '@interfaces/user.interface';
 import { registerPhoto } from '@services/posts.service';
 import { editProfile } from '@services/users.service';
 import UserAvatar from '@components/common/UserAvatar';
+import ErrorMsg from '@components/common/ErrorMsg';
 
 const useEditProfile = (user: User) => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<ProfilePayload>(user);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
   const editHandler = {
@@ -27,12 +29,16 @@ const useEditProfile = (user: User) => {
       editProfile({
         ...profile,
         id: user?.id,
-      }).then((data) => {
-        setProfile(data);
-        navigate(`/redirect?dest=/u/${user.username}`);
-      });
-
-      setIsEditing(false);
+      })
+        .then((data) => {
+          setProfile(data);
+          navigate(`/redirect?dest=/u/${user.username}`);
+          setIsEditing(false);
+        })
+        .catch((e) => {
+          setErrorMsg(e.message);
+          return;
+        });
     },
   };
 
@@ -66,16 +72,19 @@ const useEditProfile = (user: User) => {
     },
   };
 
-  return { isEditing, profile, editHandler, editDataHandler };
+  useEffect(() => {
+    setErrorMsg('');
+  }, [profile]);
+
+  return { isEditing, profile, errorMsg, editHandler, editDataHandler };
 };
 
 interface MyProfileProps {
   user: User;
 }
 const MyProfile = (props: MyProfileProps) => {
-  const { isEditing, profile, editHandler, editDataHandler } = useEditProfile(
-    props.user
-  );
+  const { isEditing, profile, errorMsg, editHandler, editDataHandler } =
+    useEditProfile(props.user);
   const logonUser = useLogonUser();
 
   return (
@@ -99,6 +108,7 @@ const MyProfile = (props: MyProfileProps) => {
               <EditButton onClick={editHandler.start}>편집</EditButton>
             )
           )}
+          <ErrorMsg msg={errorMsg} />
         </Header>
         <Main className="main">
           <Avatar>

@@ -92,3 +92,7 @@ export const getColorFromUsername = (username: string) => {
       return '#f0f0f0';
   }
 };
+
+export const getNameFromEmail = (email: string) => {
+  return email.split('@')[0];
+};
