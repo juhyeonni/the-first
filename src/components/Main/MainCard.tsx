@@ -220,7 +220,14 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
           className="faEllipsis"
           icon={faEllipsis}
           style={{ color: '#000000' }}
-          onClick={openModal}
+          onClick={() => {
+            if (logonUser) {
+              openModal();
+            } else {
+              setModalOpen((prev) => !prev);
+              console.log(modalOpen);
+            }
+          }}
         />
 
         {isModalOpen && (
