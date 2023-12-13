@@ -1,10 +1,12 @@
-import { StoryType } from '@/types/StoryType';
+import { StoryType } from '@interfaces/story.interface';
 import { baseAxios } from '@axios';
 import UserAvatar from '@components/common/UserAvatar';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useLogonUser } from '@contexts/LogonUser';
+import StoryModal from './StoryModal';
 
 const variants = {
   hover: {
@@ -37,8 +39,10 @@ const variants = {
 const Story = () => {
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
   const [clickedStory, setClickedStory] = useState<number | null>(null);
+  const [storyPlusClicked, setStoryPlusClicked] = useState<boolean>(false);
   const [story, setStory] = useState<StoryType[]>([]);
   const navigate = useNavigate();
+  const logonUser = useLogonUser();
 
   const getStory = async () => {
     try {
@@ -52,6 +56,15 @@ const Story = () => {
   useEffect(() => {
     getStory();
   }, []);
+
+  const storyPlus = () => {
+    setStoryPlusClicked(true);
+  };
+
+  const StoryModalHandler = () => {
+    setStoryPlusClicked(false);
+    getStory();
+  };
 
   return (
     <Container>
@@ -91,6 +104,26 @@ const Story = () => {
             <StoryName>{item.name}</StoryName>
           </StoryCard>
         ))}
+        {logonUser && (
+          <StoryCard>
+            <StroyPlusContainer>
+              <StroyPlus
+                onClick={() => {
+                  storyPlus();
+                }}
+              >
+                +
+              </StroyPlus>
+            </StroyPlusContainer>
+          </StoryCard>
+        )}
+        {storyPlusClicked && (
+          <StoryModal
+            user={logonUser}
+            isOpen={storyPlusClicked}
+            handler={StoryModalHandler}
+          />
+        )}
       </Wrapper>
     </Container>
   );
@@ -157,7 +190,28 @@ const StroyCircle = styled(motion.div)`
 const StoryName = styled.div`
   width: 100%;
   height: 1rem;
+  margin-top: 0.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StroyPlusContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StroyPlus = styled.div`
+  top: 0;
+  right: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
