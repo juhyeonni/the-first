@@ -1,6 +1,8 @@
 import { SkeletonImage, SkeletonText } from '@components/common/Skeleton';
 import { Post } from '@interfaces/post.interface';
 import styled from 'styled-components';
+import Modal from './Modal';
+import { useState } from 'react';
 
 interface ProfilePostsProps {
   posts: Post[];
@@ -8,6 +10,16 @@ interface ProfilePostsProps {
 
 const ProfilePosts = (props: ProfilePostsProps) => {
   const { posts } = props;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Container>
@@ -17,12 +29,14 @@ const ProfilePosts = (props: ProfilePostsProps) => {
       </PostCount>
       <PostThumbContainer>
         {posts.map((post) => (
-          // FIXME: 상세보기 모달로 변경해야됨
           <PostThumb
             key={post.id}
-            onClick={() => console.log('상세보기 모달 포스트: ' + post.id)}
+            onClick={() => {
+              openModal();
+            }}
           >
             <img src={post.photos[0]} alt="thumb" className="img" />
+            {isModalOpen && <Modal post={post} onClose={closeModal} />}
           </PostThumb>
         ))}
       </PostThumbContainer>

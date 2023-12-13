@@ -83,23 +83,23 @@ const Container = styled.div`
   }
 `;
 
-const EditButton = styled.button`
-  font-size: 0.75rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1rem; /* 133.333% */
-  text-align: center;
-  letter-spacing: -0.015em;
-  color: #262626;
+// const EditButton = styled.button`
+//   font-size: 0.75rem;
+//   font-style: normal;
+//   font-weight: 500;
+//   line-height: 1rem; /* 133.333% */
+//   text-align: center;
+//   letter-spacing: -0.015em;
+//   color: #262626;
 
-  padding: 0.1rem 0.25rem;
+//   padding: 0.1rem 0.25rem;
 
-  border-radius: 0.25rem;
-  background: linear-gradient(
-    to right,
-    rgba(128, 128, 128, 0.5),
-    rgba(128, 128, 128, 0.5)
-  );
-`;
+//   border-radius: 0.25rem;
+//   background: linear-gradient(
+//     to right,
+//     rgba(128, 128, 128, 0.5),
+//     rgba(128, 128, 128, 0.5)
+//   );
+// `;
 
 export default ProfileComponent;

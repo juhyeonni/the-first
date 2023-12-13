@@ -9,7 +9,7 @@ export async function createPost(payload: PostPayload) {
 
   const photos = await registerPhotos(payload.photos);
 
-  const res = await baseAxios.post('/posts', {
+  await baseAxios.post('/posts', {
     ...payload,
     photos,
     created_at: Date.now(),
@@ -19,6 +19,13 @@ export async function createPost(payload: PostPayload) {
 
 export async function getPosts(): Promise<Post[]> {
   const res = await baseAxios.get('/posts');
+  return res.data;
+}
+
+/* 🔴 post 삭제 🔴 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function deletePosts(postId: any): Promise<Post[]> {
+  const res = await baseAxios.delete(`/posts/${postId}`);
   return res.data;
 }
 
@@ -60,7 +67,7 @@ export async function registerPhoto(photo: File) {
 }
 
 // eslint-disable-next-line default-param-last
-export async function getPostPaginate(page = 1, limit = 10, options?: object) {
+export async function getPostPaginate(page = 1, limit = 10) {
   const res = await baseAxios.get(
     `/posts?_page=${page}&_limit=${limit}&_expand=user`
   );
@@ -74,7 +81,8 @@ export async function getPostsByUserId(userId: number) {
   return res.data;
 }
 
-// 🟡 하트 정보 get 🟡
+/* 🟡 하트 🟡 */
+// 하트 정보 get
 export async function getHeartsInfo() {
   const res = await baseAxios.get('/hearts');
   return res.data;

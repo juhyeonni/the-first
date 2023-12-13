@@ -19,21 +19,21 @@ const Container = styled.div`
   margin-bottom: 1rem;
 `;
 
-const Label = styled.label`
-  font-size: 0.75rem;
-  font-weight: 300;
-`;
+// const Label = styled.label`
+//   font-size: 0.75rem;
+//   font-weight: 300;
+// `;
 
-const InputContainer = styled.input<{ errors: FieldErrors; id: string }>`
-  height: 24px;
+const InputContainer = styled.input<{ $errors: FieldErrors; id: string }>`
+  height: 35px;
   padding: 9px 0 7px 8px;
   font-weight: 400;
-  background-color: #fff;
   outline: none;
-  background-color: rgb(250, 250, 250);
+  background-color: rgba(191, 191, 191, 0.129);
 
   border: 1px solid
-    ${({ errors, id }) => (errors[id] ? '#ff0000' : 'rgb(167, 147, 147)')};
+    ${({ $errors, id }) =>
+      $errors[id] ? '#ff0000' : 'rgba(167, 147, 147, 0.335)'};
   border-radius: 3px;
 `;
 
@@ -59,7 +59,7 @@ const Input = ({
       <InputContainer
         id={id}
         type={type}
-        errors={errors}
+        $errors={errors}
         placeholder={placeholder}
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...register(id, {

@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { registerUser } from '@services/auth.service';
 import { useState } from 'react';
 import { setAuth } from '@utils/auth';
+import { getNameFromEmail } from '@utils/formatter';
+import ErrorMsg from '@components/common/ErrorMsg';
 
 const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -25,8 +27,10 @@ const RegisterPage = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setErrorMsg('');
     registerUser({
       email: data['email'],
+      name: getNameFromEmail(data['email']),
       username: data['username'],
       password: data['password'],
     })
@@ -92,10 +96,9 @@ const RegisterPage = () => {
               style={{
                 height: '1rem',
                 padding: '0.5rem',
-                color: 'red',
               }}
             >
-              {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
+              <ErrorMsg msg={errorMsg} />
             </div>
 
             <Button label="가입" />
@@ -169,10 +172,4 @@ const BottomText = styled.div`
     color: #0095f6;
     font-weight: 600;
   }
-`;
-
-const ErrorMsg = styled.span`
-  color: red;
-
-  animation: warningShake 0.82s ease-in-out;
 `;

@@ -1,5 +1,10 @@
 import { baseAxios } from '@axios';
-import { UserWithPosts, User } from '@interfaces/user.interface';
+import {
+  UserWithPosts,
+  User,
+  ProfilePayload,
+} from '@interfaces/user.interface';
+import { validateUpdateUserPayload } from './validate.service';
 
 interface UserIncludedPassword extends User {
   password?: string;
@@ -28,8 +33,10 @@ export async function getProfileByUsername(username: string) {
   return res.data[0];
 }
 
-export async function editProfile(profile: Partial<UserWithPosts>) {
+export async function editProfile(profile: ProfilePayload) {
   if (!profile.id) throw new Error('Profile id not found');
+  await validateUpdateUserPayload(profile);
+
   const res = await baseAxios.patch(`/users/${profile.id}`, profile);
   return res.data;
 }

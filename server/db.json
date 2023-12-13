@@ -15,16 +15,7 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 1,
-        "email": "cheiru94gmail.com",
-        "username": "ichiban",
-        "name": "재일",
-        "avatar": "https://github.com/cheiru94.png",
-        "bio": "칠전팔기, 이재일!",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
     },
     {
       "id": 2,
@@ -40,16 +31,7 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 2,
-        "email": "l.juhyeonni@gmail.com",
-        "username": "juhyeonni",
-        "name": "주현",
-        "avatar": "https://github.com/juhyeonni.png",
-        "bio": "안녕하세요. 주현입니다.",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
     },
     {
       "id": 3,
@@ -65,16 +47,7 @@
         2
       ],
       "created_at": 1699880808118,
-      "updated_at": 1699880808118,
-      "user": {
-        "id": 3,
-        "email": "hetame1@gmail.com",
-        "username": "hetame1",
-        "name": "지훈",
-        "avatar": "https://github.com/hetame1.png",
-        "bio": "안냐세여, 지훈이에여",
-        "password": "1234"
-      }
+      "updated_at": 1699880808118
     }
   ],
   "users": [
@@ -111,17 +84,55 @@
       "username": "cheiru94",
       "id": 4,
       "name": "재일",
-      "bio": "안녕하세요 재일입니다."
-    }
-  ],
-  "hearts": [],
-  "comments": [
+      "bio": "안녕하세요 재일입니다.",
+      "avatar": "https://thumbsnap.com/i/EcYzGEez.png"
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "email": "scparck@g.yju.ac.kr",
+      "password": "$2a$10$BwSDIXD2ez6zL4PFyEGQe.7Yh9Pc.Nx3eZeYetdWBfrb87.V2C14a",
+      "username": "박성철",
+      "id": 5
+    },
+    {
+      "email": "an@naver.com",
+      "password": "$2a$10$PsInWFTiarhTAoUGYDTRIeY4kPI0kqpZ2SJ5dHXlmfqRRoOZ9O2QC",
+      "username": "안영진",
+      "id": 6
     }
   ],
+  "hearts": [
+    {
+      "user_id": 4,
+      "post_id": 4,
+      "id": 1
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 4
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 5
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 6
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 7
+    },
+    {
+      "user_id": 4,
+      "post_id": 2,
+      "id": 8
+    }
+  ],
+  "comments": [],
   "places": [
     {
       "id": 1,
