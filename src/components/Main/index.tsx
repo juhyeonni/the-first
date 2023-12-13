@@ -1,15 +1,11 @@
 /* eslint-disable react/self-closing-comp */
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { PostWithUser, Post, HeartsInfo } from '@interfaces/post.interface';
+import { PostWithUser, Post } from '@interfaces/post.interface';
 import Story from './Story';
 import MainCard from './MainCard';
 // eslint-disable-next-line import/order
-import {
-  getPosts,
-  getPostsUsers,
-  getHeartsInfo,
-} from '@services/posts.service';
+import { getPostsUsers } from '@services/posts.service';
 
 const Main = () => {
   const [mainPosts, setMainPosts] = useState<PostWithUser[]>([]);

@@ -2,7 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
 /* --------------------------------------import start-------------------------------------- */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { createPortal } from 'react-dom';
 
@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 
 /* 📎 service.ts (axios) */
 import {
-  patchHeart,
   getHeartsInfo,
   postHeartsInfo,
   deleteHeartsInfo,
@@ -53,7 +52,7 @@ import LogoIcon from '@assets/icons/logo';
 interface MainCardProps {
   post: PostWithUser;
   onlyPost: Post;
-  setIsPostDeleted: any;
+  setIsPostDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /* -------------------------------------MainCard------------------------------------- */
@@ -143,9 +142,9 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const ModalPortal = ({ children }) => {
+  const ModalPortal = ({ children }: { children: ReactNode }) => {
     const target = document.querySelector('.container.start');
-    return createPortal(children, target);
+    return createPortal(children, target as Element | DocumentFragment);
   };
 
   /* 🟡🟡🟡🟡🟡🟡🟡  */
@@ -357,7 +356,6 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
                   </Header>
                   <Form onSubmit={handleSubmit(onSubmit)}>
                     <Input
-                      style={{ hight: '30px' }}
                       id="email"
                       type="email"
                       label="이메일"
