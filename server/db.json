@@ -1,6 +1,23 @@
 {
   "posts": [
     {
+      "id": 1,
+      "content": "ブルーノートとジャーズ、大好き！,ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。ブルーノート東京35周年 特設サイトオープン！インタビュー映像のフルバージョンは、こちらでご覧いただけます。",
+      "photos": [
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Blue_Note_%28Tokyo%29.jpg/375px-Blue_Note_%28Tokyo%29.jpg",
+        "https://www.bluenote.co.jp/jp/artists/assets_c/2023/09/20231205fl-thumb-668x376-45885.jpg",
+        "https://postfiles.pstatic.net/MjAyMzA0MzBfNjMg/MDAxNjgyODYyMDIxODgx.1Rz05H3nJEX82kyCyC3f-2nppm4PxAhqECeV6UP6c2Eg.oyZwWxh_eQgBap-gq6Nm_Fh-FZk1pUmdxdHJm-uLPxkg.JPEG.23-century/362BD365-3C1D-45AC-993E-95E12FD1AB7E_1_105_c.jpeg?type=w773"
+      ],
+      "userId": 1,
+      "placeId": 1,
+      "tags": [
+        1,
+        2
+      ],
+      "created_at": 1699880808118,
+      "updated_at": 1699880808118
+    },
+    {
       "id": 2,
       "content": "밤하늘이 너무나도 멋짐돠!",
       "photos": [
@@ -69,6 +86,18 @@
       "name": "재일",
       "bio": "안녕하세요 재일입니다.",
       "avatar": "https://thumbsnap.com/i/EcYzGEez.png"
+    },
+    {
+      "email": "scparck@g.yju.ac.kr",
+      "password": "$2a$10$BwSDIXD2ez6zL4PFyEGQe.7Yh9Pc.Nx3eZeYetdWBfrb87.V2C14a",
+      "username": "박성철",
+      "id": 5
+    },
+    {
+      "email": "an@naver.com",
+      "password": "$2a$10$PsInWFTiarhTAoUGYDTRIeY4kPI0kqpZ2SJ5dHXlmfqRRoOZ9O2QC",
+      "username": "안영진",
+      "id": 6
     }
   ],
   "hearts": [
@@ -79,13 +108,28 @@
     },
     {
       "user_id": 4,
-      "post_id": 3,
-      "id": 2
+      "post_id": 1,
+      "id": 4
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 5
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 6
+    },
+    {
+      "user_id": 4,
+      "post_id": 1,
+      "id": 7
     },
     {
       "user_id": 4,
       "post_id": 2,
-      "id": 3
+      "id": 8
     }
   ],
   "comments": [],

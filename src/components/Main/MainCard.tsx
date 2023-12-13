@@ -408,11 +408,11 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
           flip="horizontal"
           onClick={() => {
             if (logonUser) {
-              toggleHeart();
-              console.log(isHeartShown);
-              setBounce(true);
-              setTimeout(() => setBounce(false), 1000);
-              postHeart({ user_id: logonUser?.id, post_id: post.id });
+              // toggleHeart();
+              // console.log(isHeartShown);
+              // setBounce(true);
+              // setTimeout(() => setBounce(false), 1000);
+              // postHeart({ user_id: logonUser?.id, post_id: post.id });
             } else {
               setModalOpen((prev) => !prev);
               console.log(modalOpen);
@@ -632,6 +632,7 @@ const Modal = styled.div`
 
 const StyledMainCard = styled.div`
   /* 전체 Main div */
+  transition: backdrop-filter 0.2s ease-in-out;
   margin-top: 30px;
   align-items: flex-start;
   display: flex;
