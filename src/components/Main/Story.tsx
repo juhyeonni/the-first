@@ -1,5 +1,6 @@
 import { StoryType } from '@/types/StoryType';
 import { baseAxios } from '@axios';
+import UserAvatar from '@components/common/UserAvatar';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -83,7 +84,7 @@ const Story = () => {
                 animate={clickedStory === item.id ? 'imageClick' : ''}
                 isClick={clickedStory === item.id}
               >
-                <img src={item.img} alt="" />
+                <UserAvatar src={item.img} size={56} username={item.name} />
               </StoryImage>
             </StoryProfile>
 
@@ -131,7 +132,8 @@ const StoryImage = styled(motion.div)<{ isClick?: boolean }>`
   overflow: hidden;
   background-color: #fff;
 
-  img {
+  img,
+  span {
     width: 100%;
     height: 100%;
     object-fit: cover;
