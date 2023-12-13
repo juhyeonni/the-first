@@ -635,6 +635,7 @@ const Modal = styled.div`
 
 const StyledMainCard = styled.div`
   /* 전체 Main div */
+  transition: backdrop-filter 0.2s ease-in-out;
   margin-top: 30px;
   align-items: flex-start;
   display: flex;

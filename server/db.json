@@ -92,6 +92,12 @@
       "password": "$2a$10$BwSDIXD2ez6zL4PFyEGQe.7Yh9Pc.Nx3eZeYetdWBfrb87.V2C14a",
       "username": "박성철",
       "id": 5
+    },
+    {
+      "email": "an@naver.com",
+      "password": "$2a$10$PsInWFTiarhTAoUGYDTRIeY4kPI0kqpZ2SJ5dHXlmfqRRoOZ9O2QC",
+      "username": "안영진",
+      "id": 6
     }
   ],
   "hearts": [
@@ -124,11 +130,6 @@
       "user_id": 4,
       "post_id": 2,
       "id": 8
-    },
-    {
-      "user_id": 4,
-      "post_id": 3,
-      "id": 9
     }
   ],
   "comments": [],
