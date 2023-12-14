@@ -59,4 +59,6 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  font-family: var(--font-family-system);
 `;
