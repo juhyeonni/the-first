@@ -188,7 +188,7 @@ const Container = styled.div<{ $open?: boolean }>`
     height: 100%;
   }
 
-  @media ${({ theme }) => theme.windowSize.lg} {
+  @media ${({ theme }) => theme.windowSize.xl} {
     width: var(--nav-narrow-width);
   }
 `;
@@ -215,7 +215,7 @@ const Interact = styled.button<{
     display: ${({ $open }) => ($open ? 'none' : 'inline')};
   }
 
-  @media ${({ theme }) => theme.windowSize.lg} {
+  @media ${({ theme }) => theme.windowSize.xl} {
     & > span {
       display: none;
     }
@@ -266,7 +266,7 @@ const Others = styled.div<{ $open?: boolean }>`
       display: ${({ $open }) => ($open ? 'none' : 'inline')};
     }
 
-    @media ${({ theme }) => theme.windowSize.lg} {
+    @media ${({ theme }) => theme.windowSize.xl} {
       & > span {
         display: none;
       }
@@ -291,7 +291,7 @@ const Others = styled.div<{ $open?: boolean }>`
       display: ${({ $open }) => ($open ? 'none' : 'inline')};
     }
 
-    @media ${({ theme }) => theme.windowSize.lg} {
+    @media ${({ theme }) => theme.windowSize.xl} {
       & > span {
         display: none;
       }

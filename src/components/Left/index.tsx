@@ -16,4 +16,8 @@ const Container = styled.div`
   min-width: var(--nav-narrow-width);
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.windowSize.lg} {
+    flex: 0.1;
+  }
 `;

@@ -38,7 +38,7 @@ const Main = () => {
       <div className="container start"></div>
       <Story />
       {/* 메인 카드 작성 */}
-      <div style={{ margin: '0 auto' }}>
+      <div>
         {mainPosts.map((post, index) => (
           <MainCard
             key={post.id}
@@ -61,4 +61,7 @@ const Container = styled.div`
   flex-direction: column;
 
   font-family: var(--font-family-system);
+
+  padding-left: 64px;
+  padding-right: 64px;
 `;

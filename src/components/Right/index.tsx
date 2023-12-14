@@ -19,6 +19,10 @@ export default Right;
 
 const Container = styled.div`
   flex: 1;
+
+  @media ${({ theme }) => theme.windowSize.lg} {
+    display: none;
+  }
 `;
 
 const Wrap = styled.div`
