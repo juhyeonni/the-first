@@ -53,7 +53,7 @@ export const SkeletonProfileComponent = () => {
 };
 
 const Container = styled.div`
-  flex: 1.2;
+  flex: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,6 +61,9 @@ const Container = styled.div`
     'clig' off,
     'liga' off;
   font-family: Spoqa Han Sans Neo;
+
+  padding-left: 64px;
+  padding-right: 64px;
 
   .thumb-frame {
     display: flex;

@@ -2,6 +2,7 @@ import Left from '@components/Left';
 import ProfileComponent, {
   SkeletonProfileComponent,
 } from '@components/Profile';
+import Right from '@components/Right';
 import NotFound from '@components/common/NotFound';
 import { User } from '@interfaces/user.interface';
 import { getUserByUsername } from '@services/users.service';
@@ -41,7 +42,9 @@ const ProfilePage = () => {
       ) : (
         <ProfileComponent user={user} />
       )}
-      <div style={{ flex: 1 }} />
+      <div style={{ visibility: 'hidden' }}>
+        <Right />
+      </div>
     </Container>
   );
 };
