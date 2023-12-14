@@ -46,6 +46,7 @@ import { Post, PostWithUser, HeartsInfo } from '@interfaces/post.interface';
 import { useLogonUser } from '@contexts/LogonUser';
 import UserAvatar from '@components/common/UserAvatar';
 import LogoIcon from '@assets/icons/logo';
+import PostModal from '@components/Profile/PostModal';
 
 /* --------------------------------------import end-------------------------------------- */
 
@@ -162,6 +163,17 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
     return createPortal(children, target as Element | DocumentFragment);
   };
 
+  const [openedPostModalId, setOpenedPostModalId] = useState<null | number>(
+    null
+  );
+
+  const openPostModal = (id: number) => {
+    setOpenedPostModalId(id);
+  };
+
+  const closePostModal = () => {
+    setOpenedPostModalId(null);
+  };
   //  -----------------------------------------useEffect start----------------------------------
 
   /* 🖍️ 1. 하트 정보 */
@@ -336,12 +348,17 @@ const MainCard = ({ post, setIsPostDeleted }: MainCardProps): JSX.Element => {
           flip="horizontal"
           onClick={() => {
             if (logonUser) {
-              /* 🟢🟢🟢🟢🟢 영진이 모달 연결 🟢🟢🟢🟢🟢  */
+              {
+                openPostModal(post.id);
+              }
             } else {
               setModalOpen((prev) => !prev);
             }
           }}
         />
+        {openedPostModalId && (
+          <PostModal post={post} onClose={closePostModal} />
+        )}
       </div>
 
       {/* 🟢 4. 아이디 + 게시글 작성 내용 🟢 */}
