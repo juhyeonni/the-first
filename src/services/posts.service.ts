@@ -74,9 +74,9 @@ export async function getPostPaginate(page = 1, limit = 10) {
   return res.data;
 }
 
-export async function getPostsByUserId(userId: number) {
-  const res = await baseAxios.get<Post[]>(
-    `/posts?userId=${userId}&_sort=id&_order=desc`
+export async function getPostsWithUserByUserId(userId: number) {
+  const res = await baseAxios.get<PostWithUser[]>(
+    `/posts?_expand=user&userId=${userId}&_sort=id&_order=desc`
   );
   return res.data;
 }

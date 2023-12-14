@@ -1,24 +1,24 @@
 import { SkeletonImage, SkeletonText } from '@components/common/Skeleton';
-import { Post } from '@interfaces/post.interface';
+import { PostWithUser } from '@interfaces/post.interface';
 import styled from 'styled-components';
 import Modal from './Modal';
 import { useState } from 'react';
 
 interface ProfilePostsProps {
-  posts: Post[];
+  posts: PostWithUser[];
 }
 
 const ProfilePosts = (props: ProfilePostsProps) => {
   const { posts } = props;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openedModalId, setOpenedModalId] = useState<null | number>(null);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModal = (id: number) => {
+    setOpenedModalId(id);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setOpenedModalId(null);
   };
 
   return (
@@ -29,14 +29,11 @@ const ProfilePosts = (props: ProfilePostsProps) => {
       </PostCount>
       <PostThumbContainer>
         {posts.map((post) => (
-          <PostThumb
-            key={post.id}
-            onClick={() => {
-              openModal();
-            }}
-          >
+          <PostThumb key={post.id} onClick={() => openModal(post.id)}>
             <img src={post.photos[0]} alt="thumb" className="img" />
-            {isModalOpen && <Modal post={post} onClose={closeModal} />}
+            {openedModalId === post.id && (
+              <Modal post={post} onClose={closeModal} />
+            )}
           </PostThumb>
         ))}
       </PostThumbContainer>

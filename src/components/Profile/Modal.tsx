@@ -1,15 +1,13 @@
+import { PostWithUser } from '@interfaces/post.interface';
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 type ModalProps = {
-  post: object;
+  post: PostWithUser;
   onClose: () => void;
 };
 
 const Modal = ({ post, onClose }: ModalProps) => {
-  /* 게시글 작성 시간 형식 변환 */
-  const createdAt = new Date(post.created_at).toLocaleString();
-
   const closeModal = (event: React.MouseEvent) => {
     event.stopPropagation();
     onClose();
@@ -21,6 +19,10 @@ const Modal = ({ post, onClose }: ModalProps) => {
   const handleOpenDropdown = () => {
     isDropdownOpen ? setIsDropdownOpen(false) : setIsDropdownOpen(true);
   };
+
+  useEffect(() => {
+    console.log(post);
+  }, []);
 
   return (
     <ModalBackgroundStyle>
@@ -75,7 +77,7 @@ const Modal = ({ post, onClose }: ModalProps) => {
             </ContentStyle>
             <HrStyle />
             <PostInfoStyle>
-              <p>{createdAt}</p>
+              <p>{new Date(post.updated_at).toLocaleString()}</p>
             </PostInfoStyle>
           </PostContainerStyle>
         </PostWrapperStyle>
