@@ -1,8 +1,8 @@
 import { SkeletonImage, SkeletonText } from '@components/common/Skeleton';
 import { PostWithUser } from '@interfaces/post.interface';
 import styled from 'styled-components';
-import Modal from './Modal';
 import { useState } from 'react';
+import PostModal from './PostModal';
 
 interface ProfilePostsProps {
   posts: PostWithUser[];
@@ -32,7 +32,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           <PostThumb key={post.id} onClick={() => openModal(post.id)}>
             <img src={post.photos[0]} alt="thumb" className="img" />
             {openedModalId === post.id && (
-              <Modal post={post} onClose={closeModal} />
+              <PostModal post={post} onClose={closeModal} />
             )}
           </PostThumb>
         ))}
@@ -94,7 +94,7 @@ const PostThumbContainer = styled.div`
   width: 100%;
 `;
 
-const PostThumb = styled.button`
+const PostThumb = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
