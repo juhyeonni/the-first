@@ -22,6 +22,17 @@ export async function getPosts(): Promise<Post[]> {
   return res.data;
 }
 
+/* 🟡 post 수정 🟡 */
+export async function patchPost(post: {
+  id: number;
+  content: string;
+}): Promise<PostWithUser[]> {
+  // eslint-disable-next-line prefer-template
+  // const res = await axios.patch('/posts/1', '바뀐 게시글 내용');
+  const res = await baseAxios.patch(`/posts/${post.id}`, post);
+  return res.data;
+}
+
 /* 🔴 post 삭제 🔴 */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function deletePosts(postId: any): Promise<Post[]> {
@@ -100,4 +111,11 @@ export async function postHeartsInfo(heartInfo: any) {
 export async function deleteHeartsInfo(heartId: number) {
   const res = await baseAxios.delete(`/hearts/${heartId}`);
   return res.data;
+}
+
+export async function getPostUser(postId: number) {
+  const res = await baseAxios.get<PostWithUser[]>(
+    `/posts?id=${postId}&_expand=user`
+  );
+  return res.data[0];
 }
