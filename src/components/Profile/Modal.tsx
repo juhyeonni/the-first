@@ -20,10 +20,6 @@ const Modal = ({ post, onClose }: ModalProps) => {
     isDropdownOpen ? setIsDropdownOpen(false) : setIsDropdownOpen(true);
   };
 
-  useEffect(() => {
-    console.log(post);
-  }, []);
-
   return (
     <ModalBackgroundStyle>
       <ButtonStyle onClick={closeModal}>×</ButtonStyle>
