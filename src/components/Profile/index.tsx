@@ -1,17 +1,17 @@
 import { HrLine } from '@components/common/Line';
-import { Post } from '@interfaces/post.interface';
+import { Post, PostWithUser } from '@interfaces/post.interface';
 import { User } from '@interfaces/user.interface';
-import { getPostsByUserId } from '@services/posts.service';
+import { getPostsWithUserByUserId } from '@services/posts.service';
 import styled from 'styled-components';
 import MyProfile, { SkeletonMyProfile } from './MyProfile';
 import ProfilePosts, { SkeletonProfilePosts } from './ProfilePosts';
 import { useEffect, useState } from 'react';
 
 const usePosts = (userId: number) => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostWithUser[]>([]);
 
   const fetchPosts = () => {
-    getPostsByUserId(userId)
+    getPostsWithUserByUserId(userId)
       .then((posts) => {
         setPosts([...posts]);
       })
