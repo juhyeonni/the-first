@@ -1,19 +1,17 @@
 import styled from 'styled-components';
-import AccountSwitch  from './AccountSwitch';
+import AccountSwitch from './AccountSwitch';
 import Recommend from './Recommend';
-import { color } from 'framer-motion';
 
 const Right = () => {
   return (
-
-  <Container>
-    <Wrap>
-      <Box>
-        <AccountSwitch />
-        <Recommend />
-      </Box>
-    </Wrap>
-  </Container>
+    <Container>
+      <Wrap>
+        <Box>
+          <AccountSwitch />
+          <Recommend />
+        </Box>
+      </Wrap>
+    </Container>
   );
 };
 
@@ -24,19 +22,16 @@ const Container = styled.div`
 `;
 
 const Wrap = styled.div`
-  
   width: 319px;
   height: 700px;
   margin-left: 64px;
 
-  display:flex;
+  display: flex;
 `;
 
 const Box = styled.div`
   width: 319px;
-  margin-top: 36px; 
+  margin-top: 36px;
 
   height: 546px;
-
 `;
-

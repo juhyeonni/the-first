@@ -1,5 +1,5 @@
 import { HrLine } from '@components/common/Line';
-import { Post, PostWithUser } from '@interfaces/post.interface';
+import { PostWithUser } from '@interfaces/post.interface';
 import { User } from '@interfaces/user.interface';
 import { getPostsWithUserByUserId } from '@services/posts.service';
 import styled from 'styled-components';

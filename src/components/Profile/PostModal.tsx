@@ -4,8 +4,7 @@ import { deletePosts, getPostUser, patchPost } from '@services/posts.service';
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import Slider, { Settings } from 'react-slick';
-import { width } from '@fortawesome/free-regular-svg-icons/faAddressBook';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type ModalProps = {
   post: Post;
@@ -20,10 +19,6 @@ const PostModal = ({ post, onClose }: ModalProps) => {
   const navigate = useNavigate();
 
   const [current, setCurrent] = useState<PostWithUser>();
-
-  /* 게시글 작성 시간 형식 변환 */
-  const createdAt = new Date(post.created_at).toLocaleString();
-  const updatedAt = new Date(post.updated_at).toLocaleString();
 
   const closeModal = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -158,7 +153,7 @@ const PostModal = ({ post, onClose }: ModalProps) => {
               </ContentStyle>
               <HrStyle />
               <PostInfoStyle>
-                <p>{createdAt}</p>
+                <p>{new Date(current.updated_at).toLocaleString()}</p>
               </PostInfoStyle>
             </PostContainerStyle>
           </PostWrapperStyle>
