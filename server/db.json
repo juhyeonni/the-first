@@ -58,7 +58,7 @@
       "username": "juhyeonni",
       "id": 8,
       "avatar": "https://thumbsnap.com/i/VJSzdATV.png",
-      "name": "주현",
+      "name": "이주현",
       "bio": "안녕하세요. 검색기능 구현, json-server의 사용자 인증 라우팅  기능 활용, 로그인 기능, 새 게시물 작성을 구현했습니다. github.com/juhyeonni"
     },
     {
@@ -145,8 +145,8 @@
     {
       "email": "cheiru94@gmail.com",
       "password": "$2a$10$2U8tAeAYDujX2QnmZ29YYueD4XC/jkZS6TA2QOPAqDwzf0LouqUSq",
-      "name": "cheiru94",
-      "username": "이재일",
+      "name": "이재일",
+      "username": "cheiru94",
       "id": 20,
       "avatar": "https://thumbsnap.com/i/4RCLzCph.jpg",
       "bio": "하이염 방가방가^^ 일촌 맺어요 ㅇㅎㅎ"
@@ -222,6 +222,30 @@
       "created_at": 1702580731173,
       "updated_at": 1702580731173,
       "id": 9
+    },
+    {
+      "content": "쿠마몬 스퀘어",
+      "photos": [
+        "https://thumbsnap.com/i/XCJpTup2.jpg"
+      ],
+      "tags": [],
+      "userId": 8,
+      "placeId": 1,
+      "created_at": 1702592999102,
+      "updated_at": 1702592999102,
+      "id": 10
+    },
+    {
+      "content": "귀여운 재일이 ❤️",
+      "photos": [
+        "https://thumbsnap.com/i/kreFBSjj.png"
+      ],
+      "tags": [],
+      "userId": 20,
+      "placeId": 1,
+      "created_at": 1702623583684,
+      "updated_at": 1702623583684,
+      "id": 11
     }
   ],
   "story": [
@@ -466,6 +490,11 @@
       "user_id": 7,
       "post_id": 5,
       "id": 6
+    },
+    {
+      "user_id": 20,
+      "post_id": 11,
+      "id": 7
     }
   ]
 }
